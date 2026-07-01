@@ -274,6 +274,46 @@
   }
   .quick-link:hover { border-color: var(--gold); color: var(--gold); }
 
+  .copy-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--dark-2);
+    border: 1px solid #3a3620;
+    border-radius: 6px;
+    padding: 10px 14px;
+    flex-wrap: wrap;
+  }
+
+  .copy-label {
+    font-size: 0.75rem;
+    color: var(--muted);
+    white-space: nowrap;
+    min-width: 120px;
+  }
+
+  .copy-url {
+    font-size: 0.75rem;
+    color: var(--cream);
+    flex: 1;
+    word-break: break-all;
+  }
+
+  .copy-btn {
+    background: transparent;
+    border: 1px solid #3a3620;
+    color: var(--muted);
+    padding: 4px 12px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: border-color 0.15s, color 0.15s;
+  }
+
+  .copy-btn:hover { border-color: var(--gold); color: var(--gold); }
+  .copy-btn.copied { border-color: var(--green); color: var(--green); }
+
   .countdown {
     display: inline-block;
     background: var(--dark-3);
@@ -330,14 +370,36 @@
   <div style="margin-bottom:48px;">
     <div class="section-head">Quick links</div>
     <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:10px;">
-      <a href="https://kaizen-summer-launch.vercel.app/quiz.html" target="_blank" class="quick-link">Quiz page</a>
       <a href="https://kaizen-summer-launch.vercel.app/" target="_blank" class="quick-link">Landing page</a>
+      <a href="https://kaizen-summer-launch.vercel.app/quiz.html" target="_blank" class="quick-link">Quiz page</a>
+      <a href="https://kaizen-summer-launch.vercel.app/waitlist.html?utm_source=instagram" target="_blank" class="quick-link">Waitlist page (IG link)</a>
       <a href="https://supabase.com/dashboard/project/tgoxnqitdqyxtnoeaonc/editor" target="_blank" class="quick-link">Supabase — responses</a>
       <a href="https://app.flodesk.com/segments" target="_blank" class="quick-link">Flodesk — segments</a>
       <a href="https://app.flodesk.com/emails" target="_blank" class="quick-link">Flodesk — emails</a>
       <a href="https://dashboard.stripe.com/payments" target="_blank" class="quick-link">Stripe — payments</a>
       <a href="https://vercel.com/kaizenclimbing-cmds-projects/kaizen-summer-launch" target="_blank" class="quick-link">Vercel — deployments</a>
       <a href="https://github.com/kaizenclimbing-cmd/kaizen-summer-launch" target="_blank" class="quick-link">GitHub — repo</a>
+    </div>
+
+    <div style="margin-top:24px;">
+      <div style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--muted); margin-bottom:12px;">Copy-ready links</div>
+      <div style="display:flex; flex-direction:column; gap:8px;">
+        <div class="copy-row" data-url="https://kaizen-summer-launch.vercel.app/waitlist.html?utm_source=instagram">
+          <span class="copy-label">IG bio / stories</span>
+          <code class="copy-url">kaizen-summer-launch.vercel.app/waitlist.html?utm_source=instagram</code>
+          <button class="copy-btn" onclick="copyUrl(this)">Copy</button>
+        </div>
+        <div class="copy-row" data-url="https://kaizen-summer-launch.vercel.app/quiz.html?email={{subscriber.email}}">
+          <span class="copy-label">Flodesk email CTA</span>
+          <code class="copy-url">kaizen-summer-launch.vercel.app/quiz.html?email={{subscriber.email}}</code>
+          <button class="copy-btn" onclick="copyUrl(this)">Copy</button>
+        </div>
+        <div class="copy-row" data-url="https://kaizen-summer-launch.vercel.app/">
+          <span class="copy-label">Landing page</span>
+          <code class="copy-url">kaizen-summer-launch.vercel.app</code>
+          <button class="copy-btn" onclick="copyUrl(this)">Copy</button>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -469,6 +531,14 @@
     renderTimeline();
     renderTable(rows);
     renderCountdown();
+  }
+
+  function copyUrl(btn) {
+    const url = btn.closest('.copy-row').dataset.url;
+    navigator.clipboard.writeText(url);
+    btn.textContent = 'Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
   }
 
   function renderWaitlist(waitlist) {
