@@ -361,6 +361,29 @@
     </div>
   </div>
 
+  <!-- Full waitlist -->
+  <div style="margin-bottom:56px;">
+    <div class="section-head">
+      Full waitlist — Flodesk segment
+      <button class="refresh-btn" onclick="loadData()">↻ Refresh</button>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Email</th>
+            <th>Name</th>
+            <th>Added</th>
+          </tr>
+        </thead>
+        <tbody id="waitlist-body">
+          <tr><td colspan="4" class="empty-state">Loading...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
   <!-- Timeline -->
   <div class="timeline">
     <div class="section-head">Launch timeline</div>
@@ -434,7 +457,7 @@
       return;
     }
 
-    const { rows, segments } = await res.json();
+    const { rows, segments, waitlist } = await res.json();
 
     // Show main
     document.getElementById('login-screen').style.display = 'none';
@@ -442,9 +465,26 @@
 
     renderStats(rows);
     renderSegments(segments);
+    renderWaitlist(waitlist);
     renderTimeline();
     renderTable(rows);
     renderCountdown();
+  }
+
+  function renderWaitlist(waitlist) {
+    const tbody = document.getElementById('waitlist-body');
+    if (!waitlist.length) {
+      tbody.innerHTML = '<tr><td colspan="4" class="empty-state">No subscribers in waitlist segment yet.</td></tr>';
+      return;
+    }
+    tbody.innerHTML = waitlist.map((s, i) => `
+      <tr>
+        <td style="color:var(--muted)">${i + 1}</td>
+        <td>${s.email}</td>
+        <td style="color:var(--muted)">${s.name || '—'}</td>
+        <td style="color:var(--muted); white-space:nowrap">${fmtDateTime(s.created_at)}</td>
+      </tr>
+    `).join('');
   }
 
   function renderSegments(segments) {

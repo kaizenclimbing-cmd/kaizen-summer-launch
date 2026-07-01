@@ -20,13 +20,32 @@ const SEGMENTS = [
 
 async function fetchSegmentCount(id: string): Promise<number | null> {
   const res = await fetch(`https://api.flodesk.com/v1/segments/${id}`, {
-    headers: {
-      'Authorization': 'Basic ' + btoa(FLODESK_KEY + ':'),
-    },
+    headers: { 'Authorization': 'Basic ' + btoa(FLODESK_KEY + ':') },
   });
   if (!res.ok) return null;
   const data = await res.json();
   return data.total_active_subscribers ?? null;
+}
+
+async function fetchWaitlistSubscribers(): Promise<{ email: string; name: string; created_at: string }[]> {
+  const all = [];
+  let page = 1;
+  while (true) {
+    const res = await fetch(
+      `https://api.flodesk.com/v1/subscribers?segment_id=6a452f40ee8972aab8f36ac5&page=${page}&per_page=100`,
+      { headers: { 'Authorization': 'Basic ' + btoa(FLODESK_KEY + ':') } }
+    );
+    if (!res.ok) break;
+    const data = await res.json();
+    all.push(...data.data.map((s: any) => ({
+      email: s.email,
+      name: [s.first_name, s.last_name].filter(Boolean).join(' ') || null,
+      created_at: s.created_at,
+    })));
+    if (page >= data.meta.total_pages) break;
+    page++;
+  }
+  return all;
 }
 
 Deno.serve(async (req) => {
@@ -49,8 +68,9 @@ Deno.serve(async (req) => {
 
   const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
 
-  const [{ data: rows, error }, ...segmentCounts] = await Promise.all([
+  const [{ data: rows, error }, waitlist, ...segmentCounts] = await Promise.all([
     supabase.from('summer_quiz_responses').select('*').order('created_at', { ascending: false }),
+    fetchWaitlistSubscribers(),
     ...SEGMENTS.map(s => s.id ? fetchSegmentCount(s.id) : Promise.resolve(null)),
   ]);
 
@@ -68,7 +88,7 @@ Deno.serve(async (req) => {
     hasSegment: !!s.id,
   }));
 
-  return new Response(JSON.stringify({ rows, segments }), {
+  return new Response(JSON.stringify({ rows, segments, waitlist }), {
     headers: { ...corsHeaders, 'Content-Type': 'application/json' },
   });
 });
