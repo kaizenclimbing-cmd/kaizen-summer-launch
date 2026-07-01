@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Is this for you? — Kaizen Climbing</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --dark: #1e1c14;
+    --dark-2: #2a2718;
+    --gold: #c8a84b;
+    --gold-light: #e0c068;
+    --cream: #f0eadc;
+    --muted: #9a9280;
+    --font: 'Georgia', serif;
+    --sans: system-ui, -apple-system, sans-serif;
+  }
+
+  body {
+    background: var(--dark);
+    color: var(--cream);
+    font-family: var(--sans);
+    font-size: 17px;
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+
+  .wrap {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 60px 24px 80px;
+  }
+
+  /* ── Progress bar ── */
+  .progress {
+    height: 3px;
+    background: #3a3620;
+    border-radius: 2px;
+    margin-bottom: 48px;
+    overflow: hidden;
+  }
+
+  .progress__fill {
+    height: 100%;
+    background: var(--gold);
+    border-radius: 2px;
+    transition: width 0.4s ease;
+  }
+
+  /* ── Step ── */
+  .step { display: none; }
+  .step.active { display: block; }
+
+  .step__label {
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 12px;
+  }
+
+  .step__question {
+    font-family: var(--font);
+    font-size: clamp(1.4rem, 3vw, 1.9rem);
+    color: var(--cream);
+    line-height: 1.3;
+    margin-bottom: 8px;
+  }
+
+  .step__sub {
+    font-size: 0.95rem;
+    color: var(--muted);
+    margin-bottom: 32px;
+  }
+
+  /* ── Options ── */
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 40px;
+  }
+
+  .option {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 18px 20px;
+    border: 1px solid #3a3620;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+    background: var(--dark-2);
+    user-select: none;
+  }
+
+  .option:hover {
+    border-color: var(--muted);
+  }
+
+  .option.selected {
+    border-color: var(--gold);
+    background: #2e2b1a;
+  }
+
+  .option__dot {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 2px solid #3a3620;
+    flex-shrink: 0;
+    transition: border-color 0.15s, background 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .option.selected .option__dot {
+    border-color: var(--gold);
+    background: var(--gold);
+  }
+
+  .option.selected .option__dot::after {
+    content: '';
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--dark);
+  }
+
+  .option__text {
+    color: var(--cream);
+    font-size: 1rem;
+  }
+
+  .option__sub {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+
+  /* ── Text input ── */
+  .field {
+    width: 100%;
+    background: var(--dark-2);
+    border: 1px solid #3a3620;
+    border-radius: 6px;
+    padding: 16px 20px;
+    color: var(--cream);
+    font-size: 1rem;
+    font-family: var(--sans);
+    outline: none;
+    transition: border-color 0.15s;
+    margin-bottom: 40px;
+  }
+
+  .field:focus { border-color: var(--gold); }
+  .field::placeholder { color: var(--muted); }
+
+  textarea.field {
+    resize: vertical;
+    min-height: 100px;
+    line-height: 1.6;
+  }
+
+  /* ── Buttons ── */
+  .btn {
+    display: inline-block;
+    background: var(--gold);
+    color: #1e1c14;
+    font-weight: 700;
+    font-size: 1rem;
+    padding: 18px 40px;
+    border-radius: 4px;
+    text-decoration: none;
+    letter-spacing: 0.04em;
+    transition: background 0.15s;
+    cursor: pointer;
+    border: none;
+    font-family: var(--sans);
+  }
+
+  .btn:hover { background: var(--gold-light); }
+  .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  .btn--ghost {
+    background: transparent;
+    color: var(--muted);
+    padding: 18px 0;
+    font-weight: 400;
+    letter-spacing: 0;
+  }
+
+  .btn--ghost:hover { background: transparent; color: var(--cream); }
+
+  .nav {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+
+  /* ── Pitch screen ── */
+  .pitch {
+    background: var(--dark-2);
+    border: 1px solid #3a3620;
+    border-radius: 8px;
+    padding: 36px;
+    margin-bottom: 40px;
+  }
+
+  .pitch h2 {
+    font-family: var(--font);
+    font-size: 1.5rem;
+    color: var(--cream);
+    margin-bottom: 24px;
+    line-height: 1.3;
+  }
+
+  .pitch__items {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+
+  .pitch__items li {
+    display: flex;
+    gap: 14px;
+    color: #c8c0ae;
+    font-size: 0.95rem;
+  }
+
+  .pitch__items li::before {
+    content: '→';
+    color: var(--gold);
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .pitch__items strong {
+    color: var(--cream);
+    display: block;
+    margin-bottom: 2px;
+  }
+
+  .pitch__price {
+    border-top: 1px solid #3a3620;
+    padding-top: 28px;
+    text-align: center;
+  }
+
+  .pitch__price-label {
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+
+  .pitch__price-amount {
+    font-family: var(--font);
+    font-size: 3rem;
+    color: var(--gold);
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+
+  .pitch__price-split {
+    font-size: 0.9rem;
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+
+  .pitch__price-date {
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+
+  /* ── Final / success ── */
+  .final-heading {
+    font-family: var(--font);
+    font-size: clamp(1.6rem, 3.5vw, 2.2rem);
+    color: var(--cream);
+    margin-bottom: 16px;
+    line-height: 1.25;
+  }
+
+  .final-body {
+    color: #c8c0ae;
+    margin-bottom: 32px;
+    font-size: 1rem;
+  }
+
+  .final-note {
+    margin-top: 20px;
+    font-size: 0.875rem;
+    color: var(--muted);
+  }
+
+  /* ── Error ── */
+  .error {
+    font-size: 0.875rem;
+    color: #e07070;
+    margin-top: -28px;
+    margin-bottom: 20px;
+    display: none;
+  }
+
+  .error.visible { display: block; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- Progress -->
+  <div class="progress">
+    <div class="progress__fill" id="progressFill" style="width: 0%"></div>
+  </div>
+
+  <!-- ── Step 1: Email ── -->
+  <div class="step active" id="step-1">
+    <div class="step__label">Quick check — 60 seconds</div>
+    <h1 class="step__question">First, where should I send your confirmation?</h1>
+    <p class="step__sub">Enter your email and I'll send details once you're in.</p>
+    <input type="email" class="field" id="email" placeholder="your@email.com" autocomplete="email">
+    <div class="error" id="email-error">Please enter a valid email address.</div>
+    <div class="nav">
+      <button class="btn" onclick="nextStep(1)">Continue →</button>
+    </div>
+  </div>
+
+  <!-- ── Step 2: Days per week ── -->
+  <div class="step" id="step-2">
+    <div class="step__label">Your climbing</div>
+    <h1 class="step__question">How many days a week do you currently climb or train?</h1>
+    <p class="step__sub">Including wall sessions, board sessions, or any structured training.</p>
+    <div class="options">
+      <div class="option" onclick="selectOption(this, 'days', '1–2 days')">
+        <div class="option__dot"></div>
+        <div class="option__text">1–2 days</div>
+      </div>
+      <div class="option" onclick="selectOption(this, 'days', '3–4 days')">
+        <div class="option__dot"></div>
+        <div class="option__text">3–4 days</div>
+      </div>
+      <div class="option" onclick="selectOption(this, 'days', '5+ days')">
+        <div class="option__dot"></div>
+        <div class="option__text">5+ days</div>
+      </div>
+      <div class="option" onclick="selectOption(this, 'days', 'Barely training right now')">
+        <div class="option__dot"></div>
+        <div class="option__text">Barely training right now
+          <span class="option__sub">That's fine — that's what August is for</span>
+        </div>
+      </div>
+    </div>
+    <div class="error" id="days-error">Please select an option.</div>
+    <div class="nav">
+      <button class="btn" onclick="nextStep(2)">Continue →</button>
+      <button class="btn btn--ghost" onclick="prevStep(2)">← Back</button>
+    </div>
+  </div>
+
+  <!-- ── Step 3: Boulder grade ── -->
+  <div class="step" id="step-3">
+    <div class="step__label">Your level</div>
+    <h1 class="step__question">What's your current bouldering level?</h1>
+    <p class="step__sub">Roughly — doesn't need to be exact.</p>
+    <div class="options">
+      <div class="option" onclick="selectOption(this, 'grade', 'V2–V4 / Font 5–6a')">
+        <div class="option__dot"></div>
+        <div class="option__text">V2–V4 / Font 5–6a</div>
+      </div>
+      <div class="option" onclick="selectOption(this, 'grade', 'V4–V6 / Font 6a–6c')">
+        <div class="option__dot"></div>
+        <div class="option__text">V4–V6 / Font 6a–6c</div>
+      </div>
+      <div class="option" onclick="selectOption(this, 'grade', 'V6–V8 / Font 7a–7c')">
+        <div class="option__dot"></div>
+        <div class="option__text">V6–V8 / Font 7a–7c</div>
+      </div>
+      <div class="option" onclick="selectOption(this, 'grade', 'V8+ / Font 7c+')">
+        <div class="option__dot"></div>
+        <div class="option__text">V8+ / Font 7c+</div>
+      </div>
+    </div>
+    <div class="error" id="grade-error">Please select an option.</div>
+    <div class="nav">
+      <button class="btn" onclick="nextStep(3)">Continue →</button>
+      <button class="btn btn--ghost" onclick="prevStep(3)">← Back</button>
+    </div>
+  </div>
+
+  <!-- ── Step 4: Equipment ── -->
+  <div class="step" id="step-4">
+    <div class="step__label">Your setup</div>
+    <h1 class="step__question">What do you have regular access to?</h1>
+    <p class="step__sub">Select all that apply.</p>
+    <div class="options" id="equipment-options">
+      <div class="option multi" onclick="toggleOption(this, 'equipment', 'Indoor climbing wall')">
+        <div class="option__dot"></div>
+        <div class="option__text">Indoor climbing wall</div>
+      </div>
+      <div class="option multi" onclick="toggleOption(this, 'equipment', 'Hangboard')">
+        <div class="option__dot"></div>
+        <div class="option__text">Hangboard</div>
+      </div>
+      <div class="option multi" onclick="toggleOption(this, 'equipment', 'System board / Moonboard / Kilter')">
+        <div class="option__dot"></div>
+        <div class="option__text">System board / Moonboard / Kilter</div>
+      </div>
+      <div class="option multi" onclick="toggleOption(this, 'equipment', 'Gym / weights')">
+        <div class="option__dot"></div>
+        <div class="option__text">Gym / weights</div>
+      </div>
+      <div class="option multi" onclick="toggleOption(this, 'equipment', 'Just the wall — nothing else')">
+        <div class="option__dot"></div>
+        <div class="option__text">Just the wall — nothing else</div>
+      </div>
+    </div>
+    <div class="error" id="equipment-error">Please select at least one option.</div>
+    <div class="nav">
+      <button class="btn" onclick="nextStep(4)">Continue →</button>
+      <button class="btn btn--ghost" onclick="prevStep(4)">← Back</button>
+    </div>
+  </div>
+
+  <!-- ── Step 5: Goal ── -->
+  <div class="step" id="step-5">
+    <div class="step__label">Your goal</div>
+    <h1 class="step__question">What do you want to be ready for in October?</h1>
+    <p class="step__sub">Optional — but helps me build the right plan for you.</p>
+    <textarea class="field" id="goal" placeholder="e.g. outdoor bouldering trip, specific project, just want to feel strong again..."></textarea>
+    <div class="nav">
+      <button class="btn" onclick="nextStep(5)">Continue →</button>
+      <button class="btn btn--ghost" onclick="prevStep(5)">← Back</button>
+    </div>
+  </div>
+
+  <!-- ── Step 6: Pitch + price ── -->
+  <div class="step" id="step-6">
+    <div class="step__label">You're a good fit</div>
+    <h1 class="step__question">Here's what you're joining.</h1>
+
+    <div class="pitch">
+      <h2>The Summer Lock-In — 8 weeks of structured bouldering training, starting 11 August.</h2>
+
+      <ul class="pitch__items">
+        <li>
+          <div>
+            <strong>Personalised 8-week training plan</strong>
+            Built around your schedule, equipment, and level. Adjusted to fit your life — not an idealised training week.
+          </div>
+        </li>
+        <li>
+          <div>
+            <strong>Two phases</strong>
+            Weeks 1–4: build your base back. Weeks 5–8: peak phase — power, contact strength, everything pointing at October.
+          </div>
+        </li>
+        <li>
+          <div>
+            <strong>Weekly educational content</strong>
+            Warm-up protocols, auto-regulation, fingerboard fundamentals, footwork — principles that last beyond these 8 weeks.
+          </div>
+        </li>
+        <li>
+          <div>
+            <strong>Private community</strong>
+            Climbers on the same block, keeping each other honest. This is what makes consistency actually happen.
+          </div>
+        </li>
+        <li>
+          <div>
+            <strong>Coach support throughout</strong>
+            Me and an assistant coach in the forum throughout — adjustments, questions, check-ins.
+          </div>
+        </li>
+      </ul>
+
+      <div class="pitch__price">
+        <div class="pitch__price-label">One-time investment</div>
+        <div class="pitch__price-amount">£150</div>
+        <div class="pitch__price-split">or 2 × £75 — pay half now, half in 4 weeks</div>
+        <div class="pitch__price-date">Training starts 11 August · Refund available until then</div>
+      </div>
+    </div>
+
+    <div class="nav" style="flex-direction: column; align-items: flex-start; gap: 16px;">
+      <a href="STRIPE_LINK_HERE" class="btn" style="font-size:1.1rem; padding: 20px 48px;">Join for £150 →</a>
+      <a href="STRIPE_SPLIT_LINK_HERE" class="btn btn--ghost">Pay in two instalments (2 × £75) →</a>
+    </div>
+    <p style="margin-top: 24px; font-size: 0.875rem; color: var(--muted);">After payment you'll get an email from me with next steps. I'll use your answers here to start building your plan.</p>
+  </div>
+
+</div>
+
+<script>
+  const totalSteps = 6;
+  let currentStep = 1;
+
+  const answers = {
+    email: '',
+    days: '',
+    grade: '',
+    equipment: [],
+    goal: ''
+  };
+
+  function updateProgress() {
+    const pct = ((currentStep - 1) / (totalSteps - 1)) * 100;
+    document.getElementById('progressFill').style.width = pct + '%';
+  }
+
+  function showStep(n) {
+    document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+    document.getElementById('step-' + n).classList.add('active');
+    currentStep = n;
+    updateProgress();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function prevStep(from) {
+    showStep(from - 1);
+  }
+
+  function nextStep(from) {
+    // Validate
+    if (from === 1) {
+      const email = document.getElementById('email').value.trim();
+      const err = document.getElementById('email-error');
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        err.classList.add('visible');
+        return;
+      }
+      err.classList.remove('visible');
+      answers.email = email;
+    }
+
+    if (from === 2) {
+      const err = document.getElementById('days-error');
+      if (!answers.days) { err.classList.add('visible'); return; }
+      err.classList.remove('visible');
+    }
+
+    if (from === 3) {
+      const err = document.getElementById('grade-error');
+      if (!answers.grade) { err.classList.add('visible'); return; }
+      err.classList.remove('visible');
+    }
+
+    if (from === 4) {
+      const err = document.getElementById('equipment-error');
+      if (answers.equipment.length === 0) { err.classList.add('visible'); return; }
+      err.classList.remove('visible');
+    }
+
+    if (from === 5) {
+      answers.goal = document.getElementById('goal').value.trim();
+      submitQuiz(); // fire and forget — don't await
+    }
+
+    showStep(from + 1);
+  }
+
+  function selectOption(el, key, value) {
+    // Single select
+    el.closest('.options').querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+    el.classList.add('selected');
+    answers[key] = value;
+  }
+
+  function toggleOption(el, key, value) {
+    // Multi select
+    el.classList.toggle('selected');
+    if (el.classList.contains('selected')) {
+      if (!answers[key].includes(value)) answers[key].push(value);
+    } else {
+      answers[key] = answers[key].filter(v => v !== value);
+    }
+  }
+
+  updateProgress();
+
+  // Pre-fill email from URL param (Flodesk passes this automatically)
+  window.addEventListener('DOMContentLoaded', () => {
+    const params = new URLSearchParams(window.location.search);
+    const emailParam = params.get('email');
+    if (emailParam) {
+      document.getElementById('email').value = decodeURIComponent(emailParam);
+      answers.email = decodeURIComponent(emailParam);
+    }
+  });
+
+  async function submitQuiz() {
+    try {
+      const res = await fetch(
+        'https://fkxxzkgpytxyvfwesvyt.supabase.co/functions/v1/submit-summer-quiz',
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(answers),
+        }
+      );
+      if (!res.ok) throw new Error('Submission failed');
+    } catch (e) {
+      // Fail silently — don't block the user from seeing the payment page
+      console.error(e);
+    }
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Peak for October — Kaizen Climbing</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --dark: #1e1c14;
+    --dark-2: #2a2718;
+    --gold: #c8a84b;
+    --gold-light: #e0c068;
+    --cream: #f0eadc;
+    --muted: #9a9280;
+    --font: 'Georgia', serif;
+    --sans: system-ui, -apple-system, sans-serif;
+  }
+
+  body {
+    background: var(--dark);
+    color: var(--cream);
+    font-family: var(--sans);
+    font-size: 18px;
+    line-height: 1.7;
+  }
+
+  .section { padding: 80px 24px; }
+  .container { max-width: 760px; margin: 0 auto; }
+  .container--wide { max-width: 960px; margin: 0 auto; }
+
+  /* ── Hero ── */
+  .hero {
+    background: var(--dark);
+    padding: 80px 24px 60px;
+    text-align: center;
+    border-bottom: 1px solid #3a3620;
+  }
+
+  .hero__eyebrow {
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 24px;
+  }
+
+  .hero__headline {
+    font-family: var(--font);
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    line-height: 1.2;
+    color: var(--cream);
+    margin-bottom: 24px;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .hero__sub {
+    font-size: 1.15rem;
+    color: var(--muted);
+    max-width: 540px;
+    margin: 0 auto 40px;
+    line-height: 1.6;
+  }
+
+  /* ── VSSL ── */
+  .vssl {
+    background: #0e0d09;
+    border: 2px dashed #3a3620;
+    border-radius: 8px;
+    max-width: 640px;
+    margin: 0 auto 40px;
+    padding: 80px 24px;
+    text-align: center;
+    color: var(--muted);
+    font-size: 0.95rem;
+  }
+
+  .vssl__label {
+    font-size: 13px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 12px;
+  }
+
+  /* ── CTA button ── */
+  .btn {
+    display: inline-block;
+    background: var(--gold);
+    color: #1e1c14;
+    font-weight: 700;
+    font-size: 1rem;
+    padding: 18px 40px;
+    border-radius: 4px;
+    text-decoration: none;
+    letter-spacing: 0.04em;
+    transition: background 0.15s;
+    cursor: pointer;
+    border: none;
+  }
+
+  .btn:hover { background: var(--gold-light); }
+
+  .btn--large {
+    font-size: 1.15rem;
+    padding: 22px 52px;
+  }
+
+  /* ── Price ── */
+  .price-block {
+    margin: 32px 0 8px;
+    text-align: center;
+  }
+
+  .price-block__label {
+    font-size: 13px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+
+  .price-block__amount {
+    font-family: var(--font);
+    font-size: 3rem;
+    color: var(--gold);
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+
+  .price-block__sub {
+    font-size: 0.9rem;
+    color: var(--muted);
+  }
+
+  /* ── Stats bar ── */
+  .stats {
+    background: var(--dark-2);
+    padding: 40px 24px;
+    border-top: 1px solid #3a3620;
+    border-bottom: 1px solid #3a3620;
+  }
+
+  .stats__grid {
+    display: flex;
+    justify-content: center;
+    gap: 60px;
+    flex-wrap: wrap;
+    max-width: 700px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .stat__number {
+    font-family: var(--font);
+    font-size: 2rem;
+    color: var(--gold);
+    display: block;
+  }
+
+  .stat__label {
+    font-size: 13px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  /* ── Body copy ── */
+  .section--dark { background: var(--dark); }
+  .section--alt { background: var(--dark-2); }
+
+  h2 {
+    font-family: var(--font);
+    font-size: clamp(1.6rem, 3.5vw, 2.2rem);
+    color: var(--cream);
+    margin-bottom: 24px;
+    line-height: 1.25;
+  }
+
+  h3 {
+    font-weight: 600;
+    color: var(--gold);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-size: 13px;
+    margin-bottom: 10px;
+  }
+
+  p { margin-bottom: 20px; color: #c8c0ae; }
+  p:last-child { margin-bottom: 0; }
+
+  /* ── Programme breakdown ── */
+  .phases {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+    margin-top: 40px;
+  }
+
+  .phase {
+    border: 1px solid #3a3620;
+    border-radius: 6px;
+    padding: 32px;
+  }
+
+  .phase--1 { background: var(--dark); }
+  .phase--2 { background: var(--dark); border-color: var(--gold); }
+
+  .phase__number {
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 8px;
+  }
+
+  .phase__title {
+    font-family: var(--font);
+    font-size: 1.4rem;
+    color: var(--cream);
+    margin-bottom: 12px;
+  }
+
+  .phase__body {
+    color: var(--muted);
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  /* ── What you get ── */
+  .includes {
+    list-style: none;
+    margin: 32px 0;
+  }
+
+  .includes li {
+    padding: 16px 0;
+    border-bottom: 1px solid #3a3620;
+    display: flex;
+    gap: 16px;
+    color: #c8c0ae;
+  }
+
+  .includes li:last-child { border-bottom: none; }
+
+  .includes__icon {
+    color: var(--gold);
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .includes__title {
+    font-weight: 600;
+    color: var(--cream);
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  /* ── Who it's for ── */
+  .for-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+    margin-top: 40px;
+  }
+
+  .for-card {
+    background: var(--dark);
+    border: 1px solid #3a3620;
+    border-radius: 6px;
+    padding: 28px;
+  }
+
+  .for-card__title {
+    font-weight: 600;
+    color: var(--cream);
+    margin-bottom: 8px;
+    font-size: 1rem;
+  }
+
+  .for-card__body {
+    color: var(--muted);
+    font-size: 0.95rem;
+    margin: 0;
+  }
+
+  /* ── Testimonials ── */
+  .testimonials { display: flex; flex-direction: column; gap: 32px; margin-top: 40px; }
+
+  .testimonial {
+    background: var(--dark);
+    border-left: 3px solid var(--gold);
+    padding: 28px 32px;
+    border-radius: 0 6px 6px 0;
+  }
+
+  .testimonial__quote {
+    font-size: 1.05rem;
+    color: var(--cream);
+    line-height: 1.7;
+    margin-bottom: 16px;
+    font-style: italic;
+  }
+
+  .testimonial__author {
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--gold);
+  }
+
+  /* ── Bio ── */
+  .bio {
+    display: flex;
+    gap: 40px;
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .bio__image {
+    width: 160px;
+    height: 200px;
+    background: #3a3620;
+    border-radius: 4px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--muted);
+    font-size: 13px;
+    text-align: center;
+    padding: 16px;
+  }
+
+  .bio__text h2 { margin-bottom: 16px; }
+
+  /* ── Close ── */
+  .close {
+    background: var(--dark-2);
+    border-top: 1px solid #3a3620;
+    text-align: center;
+    padding: 80px 24px;
+  }
+
+  .close__pull {
+    font-family: var(--font);
+    font-size: clamp(1.2rem, 2.5vw, 1.6rem);
+    color: var(--cream);
+    max-width: 600px;
+    margin: 0 auto 48px;
+    line-height: 1.5;
+  }
+
+  .divider {
+    width: 48px;
+    height: 2px;
+    background: var(--gold);
+    margin: 0 auto 40px;
+  }
+
+  @media (max-width: 600px) {
+    .stats__grid { gap: 32px; }
+    .bio { flex-direction: column; }
+    .bio__image { width: 100%; height: 160px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════
+     HERO
+════════════════════════════════════════ -->
+<section class="hero">
+  <div class="hero__eyebrow">Kaizen Climbing — August 2026</div>
+
+  <h1 class="hero__headline">
+    Get back in shape this summer. Peak for October.
+  </h1>
+
+  <p class="hero__sub">
+    An 8-week structured training programme for boulderers and sport climbers who want to be in their best shape when the outdoor season opens.
+  </p>
+
+  <!-- VSSL placeholder — record 90 seconds on iPhone. No script needed. -->
+  <div class="vssl">
+    <div class="vssl__label">Watch first — 90 seconds</div>
+    <p style="margin:0;">[ Replace with VSSL video embed ]</p>
+  </div>
+
+  <div class="price-block">
+    <div class="price-block__label">One payment</div>
+    <div class="price-block__amount">£150</div>
+    <div class="price-block__sub">Training starts 11 August. Limited spots.</div>
+  </div>
+
+  <br>
+  <a href="#join" class="btn btn--large">Join the programme →</a>
+  <p style="margin-top:16px; font-size:0.85rem; color:var(--muted);">Questions? Reply to any email or DM me on Instagram.</p>
+</section>
+
+<!-- ════════════════════════════════════════
+     STATS BAR
+════════════════════════════════════════ -->
+<div class="stats">
+  <div class="stats__grid">
+    <div>
+      <span class="stat__number">8</span>
+      <span class="stat__label">weeks</span>
+    </div>
+    <div>
+      <span class="stat__number">2–4</span>
+      <span class="stat__label">days / week</span>
+    </div>
+    <div>
+      <span class="stat__number">Oct</span>
+      <span class="stat__label">you peak</span>
+    </div>
+    <div>
+      <span class="stat__number">£150</span>
+      <span class="stat__label">total</span>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     THE PROBLEM
+════════════════════════════════════════ -->
+<section class="section section--dark">
+  <div class="container">
+    <h3>The summer problem</h3>
+    <h2>It's too hot to climb outside. But October's coming fast.</h2>
+
+    <p>Every year the same thing happens. Summer arrives, conditions get bad, you climb a bit less, train a bit less, and by the time October rolls around — when the rock is finally dry and cool — you're not in the shape you want to be.</p>
+
+    <p>August and September are the best months to fix that. The gym is quieter. You've got time. And if you use these 8 weeks properly, you can arrive at October in genuinely good shape — stronger fingers, better fitness, and a clear plan for the season ahead.</p>
+
+    <p>Most climbers don't do anything with this window. This programme is for the ones who do.</p>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════
+     HOW IT'S STRUCTURED
+════════════════════════════════════════ -->
+<section class="section section--alt">
+  <div class="container--wide">
+    <div style="max-width:760px; margin:0 auto 8px;">
+      <h3>The structure</h3>
+      <h2>Two phases. One goal.</h2>
+    </div>
+
+    <div class="phases">
+      <div class="phase phase--1">
+        <div class="phase__number">Weeks 1–4</div>
+        <div class="phase__title">Build the base</div>
+        <p class="phase__body">Get your body back into training. Rebuild finger strength, general fitness, and movement quality. Sessions designed to be manageable if you've had a lighter summer — not punishing, just progressive.</p>
+      </div>
+      <div class="phase phase--2">
+        <div class="phase__number">Weeks 5–8</div>
+        <div class="phase__title">Peak for October</div>
+        <p class="phase__body">Intensity increases. You're now converting that base into performance. By the final week you should be climbing well, feeling strong, and ready for whatever you've got planned outdoors.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════
+     WHAT YOU GET
+════════════════════════════════════════ -->
+<section class="section section--dark">
+  <div class="container">
+    <h3>What's included</h3>
+    <h2>A plan. A community. And training lessons that stick.</h2>
+
+    <ul class="includes">
+      <li>
+        <span class="includes__icon">→</span>
+        <div>
+          <span class="includes__title">Personalised 8-week training plan</span>
+          Built for you — bouldering or sport climbing focus, your schedule, your equipment, your current fitness level. Sets and reps adjusted to fit your life, not an idealised training week.
+        </div>
+      </li>
+      <li>
+        <span class="includes__icon">→</span>
+        <div>
+          <span class="includes__title">Structured phases with clear progression</span>
+          Fingerboard sessions, strength and conditioning, climbing workouts, and footwork drills. Each week builds on the last.
+        </div>
+      </li>
+      <li>
+        <span class="includes__icon">→</span>
+        <div>
+          <span class="includes__title">Auto-regulation — train around your life</span>
+          You'll learn how to adjust sessions based on how you actually feel that day. This is what makes training sustainable when work, sleep, and life get in the way.
+        </div>
+      </li>
+      <li>
+        <span class="includes__icon">→</span>
+        <div>
+          <span class="includes__title">Warm-up and movement education</span>
+          How to warm up properly, footwork drills you can work into any session, and the principles behind efficient movement. Threaded through the programme so it becomes habit.
+        </div>
+      </li>
+      <li>
+        <span class="includes__icon">→</span>
+        <div>
+          <span class="includes__title">Private community</span>
+          A group of climbers on the same programme at the same time. Sharing progress, staying accountable, keeping each other consistent. From the last cohort: people from the UK, Germany, Romania, New York — all training together.
+        </div>
+      </li>
+      <li>
+        <span class="includes__icon">→</span>
+        <div>
+          <span class="includes__title">Coach support throughout</span>
+          I'm in the community throughout the block. Questions, plan adjustments, check-ins. You're not doing this alone.
+        </div>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════
+     WHO IT'S FOR
+════════════════════════════════════════ -->
+<section class="section section--alt">
+  <div class="container--wide">
+    <div style="max-width:760px; margin:0 auto 8px;">
+      <h3>Who it's for</h3>
+      <h2>Boulderers and sport climbers who want to arrive at October ready.</h2>
+    </div>
+
+    <div class="for-grid">
+      <div class="for-card">
+        <div class="for-card__title">You've had a lighter summer</div>
+        <p class="for-card__body">You've climbed less, trained less. Not through laziness — just life and heat. You want to use the next 8 weeks to actually get back in shape before conditions improve.</p>
+      </div>
+      <div class="for-card">
+        <div class="for-card__title">You've got a trip or project planned</div>
+        <p class="for-card__body">October in Kalymnos. A sport climbing trip. A boulder problem you've had your eye on. You want to arrive in good shape — not hoping for the best.</p>
+      </div>
+      <div class="for-card">
+        <div class="for-card__title">You need structure and accountability</div>
+        <p class="for-card__body">You know what to do broadly, but you don't follow it consistently. A plan and a community of people doing the same thing changes that.</p>
+      </div>
+      <div class="for-card">
+        <div class="for-card__title">You're time-poor but committed</div>
+        <p class="for-card__body">You can't train 5 days a week. You don't need to. The programme is built around real life — minimum effective dose, not maximum volume.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════
+     TESTIMONIALS
+════════════════════════════════════════ -->
+<section class="section section--dark">
+  <div class="container">
+    <h3>From the last cohort</h3>
+    <h2>What climbers said after finishing.</h2>
+
+    <div class="testimonials">
+      <div class="testimonial">
+        <p class="testimonial__quote">"I'm really enjoying the training and finding it super useful. I've used another training program in the past, but this one is way better. I like that the exercises are simple and not too time-consuming. I can complete every session and still have extra climbing sessions for myself during the week."</p>
+        <div class="testimonial__author">JB — Wales</div>
+      </div>
+
+      <div class="testimonial">
+        <p class="testimonial__quote">"The plan was great, first time I've ever really followed anything. Loved having a structure, especially on days I didn't think I had time to train. It kept me accountable, and the S&C was simple and effective."</p>
+        <div class="testimonial__author">Lucy — Ireland</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════
+     BIO
+════════════════════════════════════════ -->
+<section class="section section--alt">
+  <div class="container">
+    <div class="bio">
+      <div class="bio__image">[ Add photo ]</div>
+      <div class="bio__text">
+        <h3>Your coach</h3>
+        <h2>Buster Martin</h2>
+        <p>I've been coaching climbers for over a decade and I've climbed up to 9A+ myself. I've worked with athletes from complete beginners to Olympic level — and I run a business and train around real life, which means I know exactly what it's like to try to fit this in.</p>
+        <p>I'm not the kind of coach who sends a plan and disappears. I'll be in the community throughout. If something isn't working, we adjust it.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════
+     PRICING + JOIN
+════════════════════════════════════════ -->
+<section class="section section--dark" id="join">
+  <div class="container" style="text-align:center;">
+    <h3>Join the August cohort</h3>
+    <h2>8 weeks. £150. Starts 11 August.</h2>
+    <p style="color:var(--muted); max-width:480px; margin:0 auto 40px;">One payment. Includes your personalised plan, community access, and coach support throughout the block. Limited spots — when they're gone, they're gone.</p>
+
+    <a href="STRIPE_LINK_HERE" class="btn btn--large">Join for £150 →</a>
+
+    <p style="margin-top:24px; font-size:0.9rem; color:var(--muted);">After payment you'll receive an intake form to share your goals, schedule, and climbing background. I'll use that to build your plan before we start.</p>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════
+     CLOSE
+════════════════════════════════════════ -->
+<section class="close">
+  <div class="container">
+    <div class="divider"></div>
+    <p class="close__pull">
+      October comes round every year. The question is whether you show up to it in the shape you want to be in.
+    </p>
+    <a href="#join" class="btn btn--large">Join for £150 →</a>
+  </div>
+</section>
+
+</body>
+</html>
