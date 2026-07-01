@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Launch Dashboard — Summer Lock-In 2026</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --dark: #1e1c14;
+    --dark-2: #2a2718;
+    --dark-3: #332f1e;
+    --gold: #c8a84b;
+    --gold-light: #e0c068;
+    --cream: #f0eadc;
+    --muted: #9a9280;
+    --green: #4caf74;
+    --red: #cf6679;
+    --font: 'Georgia', serif;
+    --sans: system-ui, -apple-system, sans-serif;
+  }
+
+  body {
+    background: var(--dark);
+    color: var(--cream);
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* ── Login ── */
+  #login-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    gap: 16px;
+  }
+
+  #login-screen h1 {
+    font-family: var(--font);
+    font-size: 1.5rem;
+    color: var(--gold);
+  }
+
+  #login-screen input {
+    background: var(--dark-2);
+    border: 1px solid #3a3620;
+    color: var(--cream);
+    padding: 12px 16px;
+    border-radius: 6px;
+    font-size: 1rem;
+    width: 260px;
+    text-align: center;
+  }
+
+  #login-screen input:focus { outline: none; border-color: var(--gold); }
+
+  #login-screen button {
+    background: var(--gold);
+    color: var(--dark);
+    border: none;
+    padding: 12px 32px;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    width: 260px;
+  }
+
+  #login-error { color: var(--red); font-size: 0.85rem; display: none; }
+
+  /* ── Main ── */
+  #main { display: none; max-width: 1100px; margin: 0 auto; padding: 40px 24px 80px; }
+
+  h1.page-title {
+    font-family: var(--font);
+    font-size: 1.6rem;
+    color: var(--gold);
+    margin-bottom: 4px;
+  }
+
+  .subtitle { color: var(--muted); font-size: 0.9rem; margin-bottom: 40px; }
+
+  /* ── Stat cards ── */
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; margin-bottom: 48px; }
+
+  .stat-card {
+    background: var(--dark-2);
+    border: 1px solid #3a3620;
+    border-radius: 8px;
+    padding: 20px;
+  }
+
+  .stat-card__label { font-size: 0.8rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; }
+  .stat-card__value { font-family: var(--font); font-size: 2rem; color: var(--gold); line-height: 1; }
+  .stat-card__sub { font-size: 0.8rem; color: var(--muted); margin-top: 4px; }
+
+  /* ── Section headings ── */
+  .section-head {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #3a3620;
+  }
+
+  /* ── Timeline ── */
+  .timeline { margin-bottom: 56px; }
+
+  .tl-grid {
+    display: grid;
+    grid-template-columns: 90px 1fr;
+    gap: 0;
+  }
+
+  .tl-row {
+    display: contents;
+  }
+
+  .tl-date {
+    padding: 10px 16px 10px 0;
+    font-size: 0.8rem;
+    color: var(--muted);
+    white-space: nowrap;
+    border-right: 2px solid #3a3620;
+    text-align: right;
+    position: relative;
+  }
+
+  .tl-date::after {
+    content: '';
+    position: absolute;
+    right: -5px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #3a3620;
+  }
+
+  .tl-row.today .tl-date::after { background: var(--gold); box-shadow: 0 0 8px var(--gold); }
+  .tl-row.done .tl-date::after { background: var(--green); }
+  .tl-row.key .tl-date::after { background: var(--gold); }
+
+  .tl-content {
+    padding: 8px 0 8px 20px;
+  }
+
+  .tl-label {
+    font-size: 0.9rem;
+    color: var(--cream);
+    font-weight: 500;
+  }
+
+  .tl-row.done .tl-label { color: var(--muted); }
+  .tl-row.today .tl-label { color: var(--gold-light); }
+  .tl-row.key .tl-label { color: var(--gold); }
+
+  .tl-tag {
+    display: inline-block;
+    font-size: 0.7rem;
+    padding: 2px 7px;
+    border-radius: 3px;
+    margin-left: 8px;
+    vertical-align: middle;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .tl-tag--email { background: #2a3520; color: #7bc87e; }
+  .tl-tag--sales { background: #3a2a10; color: var(--gold); }
+  .tl-tag--key { background: #3a1020; color: #e07890; }
+  .tl-tag--today { background: var(--gold); color: var(--dark); }
+
+  .tl-note {
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+
+  .tl-spacer { height: 8px; }
+
+  /* ── Table ── */
+  .responses { margin-bottom: 56px; }
+
+  .table-wrap { overflow-x: auto; }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+  }
+
+  thead th {
+    text-align: left;
+    padding: 10px 12px;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    border-bottom: 1px solid #3a3620;
+    white-space: nowrap;
+  }
+
+  tbody tr { border-bottom: 1px solid #2a2718; }
+  tbody tr:hover { background: var(--dark-2); }
+
+  tbody td {
+    padding: 10px 12px;
+    color: var(--cream);
+    vertical-align: middle;
+  }
+
+  .badge {
+    display: inline-block;
+    font-size: 0.72rem;
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-weight: 600;
+  }
+
+  .badge--yes { background: #1a3020; color: var(--green); }
+  .badge--no { background: #2a1820; color: var(--muted); }
+
+  .equip-tag {
+    display: inline-block;
+    background: var(--dark-3);
+    color: var(--muted);
+    font-size: 0.72rem;
+    padding: 2px 6px;
+    border-radius: 3px;
+    margin: 1px 2px 1px 0;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 48px;
+    color: var(--muted);
+    font-size: 0.9rem;
+  }
+
+  .refresh-btn {
+    background: transparent;
+    border: 1px solid #3a3620;
+    color: var(--muted);
+    padding: 6px 14px;
+    border-radius: 5px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    float: right;
+    margin-top: -2px;
+  }
+
+  .refresh-btn:hover { border-color: var(--gold); color: var(--gold); }
+
+  .countdown {
+    display: inline-block;
+    background: var(--dark-3);
+    border: 1px solid #3a3620;
+    border-radius: 6px;
+    padding: 4px 12px;
+    font-size: 0.8rem;
+    color: var(--gold);
+    margin-left: 12px;
+    vertical-align: middle;
+  }
+</style>
+</head>
+<body>
+
+<!-- Login -->
+<div id="login-screen">
+  <h1>Summer Lock-In Dashboard</h1>
+  <input type="password" id="pwd-input" placeholder="Enter password" />
+  <div id="login-error">Wrong password</div>
+  <button onclick="tryLogin()">Enter</button>
+</div>
+
+<!-- Main -->
+<div id="main">
+  <h1 class="page-title">Summer Lock-In 2026 <span id="countdown" class="countdown"></span></h1>
+  <p class="subtitle">8-week bouldering programme · Starts 11 August · £150</p>
+
+  <!-- Stats -->
+  <div class="stats">
+    <div class="stat-card">
+      <div class="stat-card__label">Form completions</div>
+      <div class="stat-card__value" id="stat-total">—</div>
+      <div class="stat-card__sub">quiz submitted</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-card__label">Paid</div>
+      <div class="stat-card__value" id="stat-paid">—</div>
+      <div class="stat-card__sub">confirmed buyers</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-card__label">Revenue</div>
+      <div class="stat-card__value" id="stat-revenue">—</div>
+      <div class="stat-card__sub">at £150/head</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-card__label">Days to start</div>
+      <div class="stat-card__value" id="stat-days">—</div>
+      <div class="stat-card__sub">11 August</div>
+    </div>
+  </div>
+
+  <!-- Timeline -->
+  <div class="timeline">
+    <div class="section-head">Launch timeline</div>
+    <div class="tl-grid" id="tl-grid"></div>
+  </div>
+
+  <!-- Responses table -->
+  <div class="responses">
+    <div class="section-head">
+      Quiz responses
+      <button class="refresh-btn" onclick="loadData()">↻ Refresh</button>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Email</th>
+            <th>Grade</th>
+            <th>Days/wk</th>
+            <th>Equipment</th>
+            <th>Paid</th>
+            <th>Submitted</th>
+          </tr>
+        </thead>
+        <tbody id="responses-body">
+          <tr><td colspan="7" class="empty-state">Loading...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+  const SUPABASE_FN = 'https://tgoxnqitdqyxtnoeaonc.supabase.co/functions/v1/get-dashboard-data';
+  const START_DATE = new Date('2026-08-11');
+
+  const TIMELINE = [
+    { date: '2026-07-01', label: 'Build quiz + landing page', tag: 'key', note: 'Quiz live at kaizen-summer-launch.vercel.app' },
+    { date: '2026-07-14', label: 'Warmup email 1', tag: 'email', note: 'Story/hook — why I train differently in summer' },
+    { date: '2026-07-17', label: 'Warmup email 2', tag: 'email', note: 'Problem/pain — the October trap' },
+    { date: '2026-07-21', label: 'Warmup email 3', tag: 'email', note: 'Tease — something I\'m running in August' },
+    { date: '2026-08-01', label: 'Cart opens — Sales email 1', tag: 'sales', note: 'Announcement. Quiz goes live in emails.' },
+    { date: '2026-08-03', label: 'Sales email 2', tag: 'sales', note: 'Objection handling — is this for you?' },
+    { date: '2026-08-06', label: 'Sales email 3', tag: 'sales', note: 'Social proof + what\'s inside' },
+    { date: '2026-08-09', label: 'Sales email 4', tag: 'sales', note: 'Closes tomorrow' },
+    { date: '2026-08-10', label: 'Last chance + cart closes', tag: 'key', note: 'Short email, hard deadline' },
+    { date: '2026-08-11', label: 'Programme starts', tag: 'key', note: '🏔 Week 1 plans go out' },
+  ];
+
+  let secret = '';
+
+  function tryLogin() {
+    const val = document.getElementById('pwd-input').value.trim();
+    if (!val) return;
+    secret = val;
+    loadData();
+  }
+
+  document.getElementById('pwd-input').addEventListener('keydown', e => {
+    if (e.key === 'Enter') tryLogin();
+  });
+
+  async function loadData() {
+    const res = await fetch(SUPABASE_FN, {
+      headers: { 'x-dashboard-secret': secret }
+    });
+
+    if (res.status === 401) {
+      document.getElementById('login-error').style.display = 'block';
+      return;
+    }
+
+    const { rows } = await res.json();
+
+    // Show main
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('main').style.display = 'block';
+
+    renderStats(rows);
+    renderTimeline();
+    renderTable(rows);
+    renderCountdown();
+  }
+
+  function renderStats(rows) {
+    const paid = rows.filter(r => r.paid).length;
+    document.getElementById('stat-total').textContent = rows.length;
+    document.getElementById('stat-paid').textContent = paid;
+    document.getElementById('stat-revenue').textContent = '£' + (paid * 150).toLocaleString();
+    const days = Math.ceil((START_DATE - new Date()) / 86400000);
+    document.getElementById('stat-days').textContent = days > 0 ? days : 0;
+  }
+
+  function renderCountdown() {
+    const days = Math.ceil((START_DATE - new Date()) / 86400000);
+    const el = document.getElementById('countdown');
+    if (days > 0) el.textContent = days + ' days to go';
+    else el.textContent = 'Live!';
+  }
+
+  function renderTimeline() {
+    const today = new Date().toISOString().slice(0, 10);
+    const grid = document.getElementById('tl-grid');
+    grid.innerHTML = '';
+
+    TIMELINE.forEach(item => {
+      const isToday = item.date === today;
+      const isDone = item.date < today;
+      const cls = isToday ? 'today' : isDone ? 'done' : item.tag === 'key' ? 'key' : '';
+
+      const dateEl = document.createElement('div');
+      dateEl.className = 'tl-date';
+      dateEl.textContent = fmtDate(item.date);
+
+      const contentEl = document.createElement('div');
+      contentEl.className = 'tl-content';
+
+      const tagMap = {
+        email: ['email', 'Warmup'],
+        sales: ['sales', 'Sales'],
+        key: ['key', isToday ? 'Today' : '★'],
+      };
+      const [tagClass, tagLabel] = tagMap[item.tag] || ['', ''];
+
+      contentEl.innerHTML = `
+        <div class="tl-label">
+          ${item.label}
+          <span class="tl-tag tl-tag--${isToday ? 'today' : tagClass}">${isToday ? 'Today' : tagLabel}</span>
+        </div>
+        ${item.note ? `<div class="tl-note">${item.note}</div>` : ''}
+      `;
+
+      const row = document.createElement('div');
+      row.className = `tl-row ${cls}`;
+      row.appendChild(dateEl);
+      row.appendChild(contentEl);
+      grid.appendChild(row);
+    });
+  }
+
+  function renderTable(rows) {
+    const tbody = document.getElementById('responses-body');
+    if (!rows.length) {
+      tbody.innerHTML = '<tr><td colspan="7" class="empty-state">No responses yet.</td></tr>';
+      return;
+    }
+
+    tbody.innerHTML = rows.map((r, i) => `
+      <tr>
+        <td style="color:var(--muted)">${i + 1}</td>
+        <td>${r.email}</td>
+        <td>${r.grade || '—'}</td>
+        <td>${r.days || '—'}</td>
+        <td>${(r.equipment || []).map(e => `<span class="equip-tag">${e}</span>`).join('')}</td>
+        <td><span class="badge badge--${r.paid ? 'yes' : 'no'}">${r.paid ? 'Paid' : 'No'}</span></td>
+        <td style="color:var(--muted); white-space:nowrap">${fmtDateTime(r.created_at)}</td>
+      </tr>
+    `).join('');
+  }
+
+  function fmtDate(iso) {
+    const d = new Date(iso + 'T00:00:00');
+    return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+  }
+
+  function fmtDateTime(iso) {
+    const d = new Date(iso);
+    return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) + ' ' +
+      d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+  }
+</script>
+</body>
+</html>
