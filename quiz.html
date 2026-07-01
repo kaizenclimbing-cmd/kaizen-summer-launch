@@ -33,7 +33,6 @@
     padding: 60px 24px 80px;
   }
 
-  /* ── Progress bar ── */
   .progress {
     height: 3px;
     background: #3a3620;
@@ -49,7 +48,6 @@
     transition: width 0.4s ease;
   }
 
-  /* ── Step ── */
   .step { display: none; }
   .step.active { display: block; }
 
@@ -75,7 +73,6 @@
     margin-bottom: 32px;
   }
 
-  /* ── Options ── */
   .options {
     display: flex;
     flex-direction: column;
@@ -96,14 +93,8 @@
     user-select: none;
   }
 
-  .option:hover {
-    border-color: var(--muted);
-  }
-
-  .option.selected {
-    border-color: var(--gold);
-    background: #2e2b1a;
-  }
+  .option:hover { border-color: var(--muted); }
+  .option.selected { border-color: var(--gold); background: #2e2b1a; }
 
   .option__dot {
     width: 20px;
@@ -130,10 +121,7 @@
     background: var(--dark);
   }
 
-  .option__text {
-    color: var(--cream);
-    font-size: 1rem;
-  }
+  .option__text { color: var(--cream); font-size: 1rem; }
 
   .option__sub {
     display: block;
@@ -142,7 +130,6 @@
     margin-top: 2px;
   }
 
-  /* ── Text input ── */
   .field {
     width: 100%;
     background: var(--dark-2);
@@ -160,13 +147,6 @@
   .field:focus { border-color: var(--gold); }
   .field::placeholder { color: var(--muted); }
 
-  textarea.field {
-    resize: vertical;
-    min-height: 100px;
-    line-height: 1.6;
-  }
-
-  /* ── Buttons ── */
   .btn {
     display: inline-block;
     background: var(--gold);
@@ -184,124 +164,34 @@
   }
 
   .btn:hover { background: var(--gold-light); }
-  .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  .btn--large {
+    font-size: 1.1rem;
+    padding: 20px 48px;
+    display: block;
+    text-align: center;
+  }
 
   .btn--ghost {
     background: transparent;
     color: var(--muted);
-    padding: 18px 0;
+    padding: 14px 20px;
     font-weight: 400;
     letter-spacing: 0;
-  }
-
-  .btn--ghost:hover { background: transparent; color: var(--cream); }
-
-  .nav {
-    display: flex;
-    align-items: center;
-    gap: 24px;
-  }
-
-  /* ── Pitch screen ── */
-  .pitch {
-    background: var(--dark-2);
     border: 1px solid #3a3620;
-    border-radius: 8px;
-    padding: 36px;
-    margin-bottom: 40px;
-  }
-
-  .pitch h2 {
-    font-family: var(--font);
-    font-size: 1.5rem;
-    color: var(--cream);
-    margin-bottom: 24px;
-    line-height: 1.3;
-  }
-
-  .pitch__items {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    margin-bottom: 32px;
-  }
-
-  .pitch__items li {
-    display: flex;
-    gap: 14px;
-    color: #c8c0ae;
-    font-size: 0.95rem;
-  }
-
-  .pitch__items li::before {
-    content: '→';
-    color: var(--gold);
-    flex-shrink: 0;
-    margin-top: 1px;
-  }
-
-  .pitch__items strong {
-    color: var(--cream);
+    border-radius: 4px;
     display: block;
-    margin-bottom: 2px;
-  }
-
-  .pitch__price {
-    border-top: 1px solid #3a3620;
-    padding-top: 28px;
     text-align: center;
+    text-decoration: none;
+    font-size: 0.95rem;
+    cursor: pointer;
+    font-family: var(--sans);
   }
 
-  .pitch__price-label {
-    font-size: 12px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-bottom: 8px;
-  }
+  .btn--ghost:hover { color: var(--cream); border-color: var(--muted); }
 
-  .pitch__price-amount {
-    font-family: var(--font);
-    font-size: 3rem;
-    color: var(--gold);
-    line-height: 1;
-    margin-bottom: 6px;
-  }
+  .nav { display: flex; align-items: center; gap: 16px; }
 
-  .pitch__price-split {
-    font-size: 0.9rem;
-    color: var(--muted);
-    margin-bottom: 4px;
-  }
-
-  .pitch__price-date {
-    font-size: 0.85rem;
-    color: var(--muted);
-  }
-
-  /* ── Final / success ── */
-  .final-heading {
-    font-family: var(--font);
-    font-size: clamp(1.6rem, 3.5vw, 2.2rem);
-    color: var(--cream);
-    margin-bottom: 16px;
-    line-height: 1.25;
-  }
-
-  .final-body {
-    color: #c8c0ae;
-    margin-bottom: 32px;
-    font-size: 1rem;
-  }
-
-  .final-note {
-    margin-top: 20px;
-    font-size: 0.875rem;
-    color: var(--muted);
-  }
-
-  /* ── Error ── */
   .error {
     font-size: 0.875rem;
     color: #e07070;
@@ -311,17 +201,71 @@
   }
 
   .error.visible { display: block; }
+
+  /* ── Pitch screen ── */
+  .section-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #5a5548;
+    margin-bottom: 12px;
+  }
+
+  .checklist { list-style: none; display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
+  .check-item { display: flex; align-items: flex-start; gap: 10px; font-size: 0.95rem; color: #c8c0ae; line-height: 1.5; }
+  .check-icon { color: var(--gold); flex-shrink: 0; margin-top: 3px; }
+
+  .before-after { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+  .ba { background: var(--dark-2); border: 1px solid #3a3620; border-radius: 6px; padding: 14px; }
+  .ba.after { border-color: var(--gold); }
+  .ba-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
+  .ba .ba-label { color: #5a5548; }
+  .ba.after .ba-label { color: var(--gold); }
+  .ba-items { list-style: none; display: flex; flex-direction: column; gap: 5px; }
+  .ba-item { font-size: 12px; display: flex; gap: 6px; line-height: 1.4; }
+  .ba .ba-item { color: #5a5548; }
+  .ba.after .ba-item { color: #c8c0ae; }
+
+  .testimonials { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+  .testimonial { background: var(--dark-2); border-left: 3px solid var(--gold); padding: 12px 16px; border-radius: 0 4px 4px 0; }
+  .tq { font-size: 0.9rem; color: #c8c0ae; font-style: italic; line-height: 1.6; margin-bottom: 6px; }
+  .ta { font-size: 11px; color: var(--gold); text-transform: uppercase; letter-spacing: 0.08em; }
+
+  .stack { list-style: none; display: flex; flex-direction: column; gap: 8px; margin-bottom: 8px; }
+  .stack-item { display: flex; justify-content: space-between; align-items: center; gap: 12px; font-size: 0.9rem; }
+  .stack-name { color: #c8c0ae; }
+  .stack-val { color: #5a5548; font-size: 0.85rem; }
+  .stack-total { display: flex; justify-content: space-between; align-items: center; padding-top: 10px; border-top: 1px solid #3a3620; font-size: 0.85rem; }
+  .stack-strike { color: #5a5548; text-decoration: line-through; }
+
+  .scarcity { background: var(--dark-2); border: 1px solid #3a3620; border-radius: 6px; padding: 14px 16px; margin-bottom: 20px; }
+  .sc-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+  .sc-label { font-size: 0.85rem; color: var(--muted); }
+  .sc-count { font-size: 0.85rem; color: var(--cream); }
+  .sc-count span { color: var(--gold); font-weight: 600; }
+  .sc-bar { height: 5px; background: #3a3620; border-radius: 3px; overflow: hidden; margin-bottom: 8px; }
+  .sc-fill { height: 100%; width: 78%; background: var(--gold); border-radius: 3px; }
+  .sc-deadline { font-size: 12px; color: #5a5548; }
+  .sc-deadline strong { color: var(--muted); }
+
+  .divider { border: none; border-top: 1px solid #3a3620; margin: 20px 0; }
+
+  .price-row { display: flex; align-items: baseline; gap: 12px; margin-bottom: 4px; }
+  .price-main { font-family: var(--font); font-size: 2.4rem; color: var(--gold); line-height: 1; }
+  .price-split { font-size: 0.9rem; color: var(--muted); }
+  .refund-note { font-size: 0.8rem; color: #5a5548; margin-bottom: 24px; }
+
+  .cta-stack { display: flex; flex-direction: column; gap: 12px; }
 </style>
 </head>
 <body>
 <div class="wrap">
 
-  <!-- Progress -->
   <div class="progress">
     <div class="progress__fill" id="progressFill" style="width: 0%"></div>
   </div>
 
-  <!-- ── Step 1: Email ── -->
+  <!-- Step 1: Email -->
   <div class="step active" id="step-1">
     <div class="step__label">Quick check — 60 seconds</div>
     <h1 class="step__question">First, where should I send your confirmation?</h1>
@@ -333,74 +277,64 @@
     </div>
   </div>
 
-  <!-- ── Step 2: Days per week ── -->
+  <!-- Step 2: Days per week — auto-advance -->
   <div class="step" id="step-2">
     <div class="step__label">Your climbing</div>
     <h1 class="step__question">How many days a week do you currently climb or train?</h1>
     <p class="step__sub">Including wall sessions, board sessions, or any structured training.</p>
     <div class="options">
-      <div class="option" onclick="selectOption(this, 'days', '1–2 days')">
+      <div class="option" onclick="selectAndAdvance(this, 'days', '1–2 days', 2)">
         <div class="option__dot"></div>
         <div class="option__text">1–2 days</div>
       </div>
-      <div class="option" onclick="selectOption(this, 'days', '3–4 days')">
+      <div class="option" onclick="selectAndAdvance(this, 'days', '3–4 days', 2)">
         <div class="option__dot"></div>
         <div class="option__text">3–4 days</div>
       </div>
-      <div class="option" onclick="selectOption(this, 'days', '5+ days')">
+      <div class="option" onclick="selectAndAdvance(this, 'days', '5+ days', 2)">
         <div class="option__dot"></div>
         <div class="option__text">5+ days</div>
       </div>
-      <div class="option" onclick="selectOption(this, 'days', 'Barely training right now')">
+      <div class="option" onclick="selectAndAdvance(this, 'days', 'Barely training right now', 2)">
         <div class="option__dot"></div>
         <div class="option__text">Barely training right now
           <span class="option__sub">That's fine — that's what August is for</span>
         </div>
       </div>
     </div>
-    <div class="error" id="days-error">Please select an option.</div>
-    <div class="nav">
-      <button class="btn" onclick="nextStep(2)">Continue →</button>
-      <button class="btn btn--ghost" onclick="prevStep(2)">← Back</button>
-    </div>
   </div>
 
-  <!-- ── Step 3: Boulder grade ── -->
+  <!-- Step 3: Grade — auto-advance -->
   <div class="step" id="step-3">
     <div class="step__label">Your level</div>
     <h1 class="step__question">What's your current bouldering level?</h1>
     <p class="step__sub">Roughly — doesn't need to be exact.</p>
     <div class="options">
-      <div class="option" onclick="selectOption(this, 'grade', 'V2–V4 / Font 5–6a')">
+      <div class="option" onclick="selectAndAdvance(this, 'grade', 'V2–V4 / Font 5–6a', 3)">
         <div class="option__dot"></div>
         <div class="option__text">V2–V4 / Font 5–6a</div>
       </div>
-      <div class="option" onclick="selectOption(this, 'grade', 'V4–V6 / Font 6a–6c')">
+      <div class="option" onclick="selectAndAdvance(this, 'grade', 'V4–V6 / Font 6a–6c', 3)">
         <div class="option__dot"></div>
         <div class="option__text">V4–V6 / Font 6a–6c</div>
       </div>
-      <div class="option" onclick="selectOption(this, 'grade', 'V6–V8 / Font 7a–7c')">
+      <div class="option" onclick="selectAndAdvance(this, 'grade', 'V6–V8 / Font 7a–7c', 3)">
         <div class="option__dot"></div>
         <div class="option__text">V6–V8 / Font 7a–7c</div>
       </div>
-      <div class="option" onclick="selectOption(this, 'grade', 'V8+ / Font 7c+')">
+      <div class="option" onclick="selectAndAdvance(this, 'grade', 'V8+ / Font 7c+', 3)">
         <div class="option__dot"></div>
         <div class="option__text">V8+ / Font 7c+</div>
       </div>
     </div>
-    <div class="error" id="grade-error">Please select an option.</div>
-    <div class="nav">
-      <button class="btn" onclick="nextStep(3)">Continue →</button>
-      <button class="btn btn--ghost" onclick="prevStep(3)">← Back</button>
-    </div>
   </div>
 
-  <!-- ── Step 4: Equipment ── -->
+  <!-- Step 4: Equipment — multi-select, manual continue -->
   <div class="step" id="step-4">
     <div class="step__label">Your setup</div>
     <h1 class="step__question">What do you have regular access to?</h1>
-    <p class="step__sub">Select all that apply.</p>
-    <div class="options" id="equipment-options">
+    <p class="step__sub">Select all that apply, then continue.</p>
+    <div class="options">
       <div class="option multi" onclick="toggleOption(this, 'equipment', 'Indoor climbing wall')">
         <div class="option__dot"></div>
         <div class="option__text">Indoor climbing wall</div>
@@ -425,91 +359,107 @@
     <div class="error" id="equipment-error">Please select at least one option.</div>
     <div class="nav">
       <button class="btn" onclick="nextStep(4)">Continue →</button>
-      <button class="btn btn--ghost" onclick="prevStep(4)">← Back</button>
+      <button class="btn btn--ghost" onclick="prevStep(4)" style="padding:14px 20px; border:none; background:transparent; color:var(--muted);">← Back</button>
     </div>
   </div>
 
-  <!-- ── Step 5: Goal ── -->
+  <!-- Step 5: Pitch + payment -->
   <div class="step" id="step-5">
-    <div class="step__label">Your goal</div>
-    <h1 class="step__question">What do you want to be ready for in October?</h1>
-    <p class="step__sub">Optional — but helps me build the right plan for you.</p>
-    <textarea class="field" id="goal" placeholder="e.g. outdoor bouldering trip, specific project, just want to feel strong again..."></textarea>
-    <div class="nav">
-      <button class="btn" onclick="nextStep(5)">Continue →</button>
-      <button class="btn btn--ghost" onclick="prevStep(5)">← Back</button>
-    </div>
-  </div>
-
-  <!-- ── Step 6: Pitch + price ── -->
-  <div class="step" id="step-6">
     <div class="step__label">You're a good fit</div>
-    <h1 class="step__question">Here's what you're joining.</h1>
+    <h1 class="step__question" style="margin-bottom:20px;">Based on your answers — this is exactly what you need.</h1>
 
-    <div class="pitch">
-      <h2>The Summer Lock-In — 8 weeks of structured bouldering training, starting 11 August.</h2>
+    <!-- Identity -->
+    <ul class="checklist">
+      <li class="check-item"><span class="check-icon">→</span>You want to use this summer to actually train, not drift through it</li>
+      <li class="check-item"><span class="check-icon">→</span>You want to arrive at October stronger, not hoping for the best</li>
+      <li class="check-item"><span class="check-icon">→</span>You know you train better with structure and people around you</li>
+    </ul>
 
-      <ul class="pitch__items">
-        <li>
-          <div>
-            <strong>Personalised 8-week training plan</strong>
-            Built around your schedule, equipment, and level. Adjusted to fit your life — not an idealised training week.
-          </div>
-        </li>
-        <li>
-          <div>
-            <strong>Two phases</strong>
-            Weeks 1–4: build your base back. Weeks 5–8: peak phase — power, contact strength, everything pointing at October.
-          </div>
-        </li>
-        <li>
-          <div>
-            <strong>Weekly educational content</strong>
-            Warm-up protocols, auto-regulation, fingerboard fundamentals, footwork — principles that last beyond these 8 weeks.
-          </div>
-        </li>
-        <li>
-          <div>
-            <strong>Private community</strong>
-            Climbers on the same block, keeping each other honest. This is what makes consistency actually happen.
-          </div>
-        </li>
-        <li>
-          <div>
-            <strong>Coach support throughout</strong>
-            Me and an assistant coach in the forum throughout — adjustments, questions, check-ins.
-          </div>
-        </li>
-      </ul>
+    <hr class="divider">
 
-      <div class="pitch__price">
-        <div class="pitch__price-label">One-time investment</div>
-        <div class="pitch__price-amount">£150</div>
-        <div class="pitch__price-split">or 2 × £75 — pay half now, half in 4 weeks</div>
-        <div class="pitch__price-date">Training starts 11 August · Refund available until then</div>
+    <!-- Loss aversion -->
+    <div class="section-label">October is 10 weeks away</div>
+    <div class="before-after">
+      <div class="ba">
+        <div class="ba-label">Without this</div>
+        <ul class="ba-items">
+          <li class="ba-item">✗ Inconsistent summer</li>
+          <li class="ba-item">✗ No structure or plan</li>
+          <li class="ba-item">✗ Arrive underprepared</li>
+          <li class="ba-item">✗ Same grades as before</li>
+        </ul>
+      </div>
+      <div class="ba after">
+        <div class="ba-label">With this</div>
+        <ul class="ba-items">
+          <li class="ba-item">→ 8 weeks of progress</li>
+          <li class="ba-item">→ Stronger fingers</li>
+          <li class="ba-item">→ Peaked for October</li>
+          <li class="ba-item">→ Actually climbing well</li>
+        </ul>
       </div>
     </div>
 
-    <div class="nav" style="flex-direction: column; align-items: flex-start; gap: 16px;">
-      <a href="STRIPE_LINK_HERE" class="btn" style="font-size:1.1rem; padding: 20px 48px;">Join for £150 →</a>
-      <a href="STRIPE_SPLIT_LINK_HERE" class="btn btn--ghost">Pay in two instalments (2 × £75) →</a>
+    <!-- Social proof -->
+    <div class="section-label">From the last cohort</div>
+    <div class="testimonials">
+      <div class="testimonial">
+        <div class="tq">"First time I've ever really followed anything. Kept me accountable on days I didn't think I had time to train."</div>
+        <div class="ta">Lucy — Ireland</div>
+      </div>
+      <div class="testimonial">
+        <div class="tq">"Way better than any other programme I've used. Simple, not too time-consuming. I completed every session."</div>
+        <div class="ta">JB — Wales</div>
+      </div>
     </div>
-    <p style="margin-top: 24px; font-size: 0.875rem; color: var(--muted);">After payment you'll get an email from me with next steps. I'll use your answers here to start building your plan.</p>
+
+    <!-- Value stack -->
+    <div class="section-label">What's included</div>
+    <ul class="stack">
+      <li class="stack-item"><span class="stack-name">→ Personalised 8-week plan</span><span class="stack-val">worth £200</span></li>
+      <li class="stack-item"><span class="stack-name">→ Weekly education videos</span><span class="stack-val">worth £60</span></li>
+      <li class="stack-item"><span class="stack-name">→ Private community</span><span class="stack-val">included</span></li>
+      <li class="stack-item"><span class="stack-name">→ Coach support throughout</span><span class="stack-val">worth £80</span></li>
+    </ul>
+    <div class="stack-total">
+      <span class="stack-strike">Total value: £340</span>
+      <span style="font-size:0.85rem; color:var(--muted);">your price today:</span>
+    </div>
+
+    <hr class="divider">
+
+    <!-- Scarcity -->
+    <div class="scarcity">
+      <div class="sc-top">
+        <span class="sc-label">Places filled</span>
+        <span class="sc-count"><span>5 spots</span> remaining</span>
+      </div>
+      <div class="sc-bar"><div class="sc-fill"></div></div>
+      <div class="sc-deadline">Cart closes <strong>10 August</strong> — plans are written the week before we start</div>
+    </div>
+
+    <!-- Price + CTA -->
+    <div class="price-row">
+      <div class="price-main">£150</div>
+      <div class="price-split">or 2 × £75</div>
+    </div>
+    <div class="refund-note">Refund available if you change your mind before 11 August.</div>
+
+    <div class="cta-stack">
+      <a href="STRIPE_LINK_HERE" class="btn btn--large">Join the Summer Lock-In →</a>
+      <a href="STRIPE_SPLIT_LINK_HERE" class="btn--ghost">Pay in two instalments (2 × £75) →</a>
+    </div>
+
+    <p style="margin-top:20px; font-size:0.85rem; color:var(--muted);">After payment you'll get an email from me with next steps. I'll use your answers to start building your plan.</p>
   </div>
 
 </div>
 
 <script>
-  const totalSteps = 6;
+  const totalSteps = 5;
   let currentStep = 1;
 
-  const answers = {
-    email: '',
-    days: '',
-    grade: '',
-    equipment: [],
-    goal: ''
-  };
+  const answers = { email: '', days: '', grade: '', equipment: [] };
 
   function updateProgress() {
     const pct = ((currentStep - 1) / (totalSteps - 1)) * 100;
@@ -524,58 +474,37 @@
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  function prevStep(from) {
-    showStep(from - 1);
-  }
+  function prevStep(from) { showStep(from - 1); }
 
   function nextStep(from) {
-    // Validate
     if (from === 1) {
       const email = document.getElementById('email').value.trim();
       const err = document.getElementById('email-error');
       if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-        err.classList.add('visible');
-        return;
+        err.classList.add('visible'); return;
       }
       err.classList.remove('visible');
       answers.email = email;
-    }
-
-    if (from === 2) {
-      const err = document.getElementById('days-error');
-      if (!answers.days) { err.classList.add('visible'); return; }
-      err.classList.remove('visible');
-    }
-
-    if (from === 3) {
-      const err = document.getElementById('grade-error');
-      if (!answers.grade) { err.classList.add('visible'); return; }
-      err.classList.remove('visible');
     }
 
     if (from === 4) {
       const err = document.getElementById('equipment-error');
       if (answers.equipment.length === 0) { err.classList.add('visible'); return; }
       err.classList.remove('visible');
-    }
-
-    if (from === 5) {
-      answers.goal = document.getElementById('goal').value.trim();
-      submitQuiz(); // fire and forget — don't await
+      submitQuiz();
     }
 
     showStep(from + 1);
   }
 
-  function selectOption(el, key, value) {
-    // Single select
+  function selectAndAdvance(el, key, value, from) {
     el.closest('.options').querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
     el.classList.add('selected');
     answers[key] = value;
+    setTimeout(() => showStep(from + 1), 220);
   }
 
   function toggleOption(el, key, value) {
-    // Multi select
     el.classList.toggle('selected');
     if (el.classList.contains('selected')) {
       if (!answers[key].includes(value)) answers[key].push(value);
@@ -584,34 +513,29 @@
     }
   }
 
-  updateProgress();
-
-  // Pre-fill email from URL param (Flodesk passes this automatically)
   window.addEventListener('DOMContentLoaded', () => {
     const params = new URLSearchParams(window.location.search);
     const emailParam = params.get('email');
     if (emailParam) {
-      document.getElementById('email').value = decodeURIComponent(emailParam);
-      answers.email = decodeURIComponent(emailParam);
+      const decoded = decodeURIComponent(emailParam);
+      document.getElementById('email').value = decoded;
+      answers.email = decoded;
     }
   });
 
   async function submitQuiz() {
     try {
-      const res = await fetch(
-        'https://tgoxnqitdqyxtnoeaonc.supabase.co/functions/v1/submit-summer-quiz',
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(answers),
-        }
-      );
-      if (!res.ok) throw new Error('Submission failed');
+      await fetch('https://tgoxnqitdqyxtnoeaonc.supabase.co/functions/v1/submit-summer-quiz', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(answers),
+      });
     } catch (e) {
-      // Fail silently — don't block the user from seeing the payment page
       console.error(e);
     }
   }
+
+  updateProgress();
 </script>
 </body>
 </html>
