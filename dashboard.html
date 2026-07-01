@@ -261,6 +261,19 @@
 
   .refresh-btn:hover { border-color: var(--gold); color: var(--gold); }
 
+  .quick-link {
+    display: block;
+    background: var(--dark-2);
+    border: 1px solid #3a3620;
+    border-radius: 6px;
+    padding: 12px 16px;
+    color: var(--cream);
+    text-decoration: none;
+    font-size: 0.875rem;
+    transition: border-color 0.15s, color 0.15s;
+  }
+  .quick-link:hover { border-color: var(--gold); color: var(--gold); }
+
   .countdown {
     display: inline-block;
     background: var(--dark-3);
@@ -310,6 +323,41 @@
       <div class="stat-card__label">Days to start</div>
       <div class="stat-card__value" id="stat-days">—</div>
       <div class="stat-card__sub">11 August</div>
+    </div>
+  </div>
+
+  <!-- Quick links -->
+  <div style="margin-bottom:48px;">
+    <div class="section-head">Quick links</div>
+    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:10px;">
+      <a href="https://kaizen-summer-launch.vercel.app/quiz.html" target="_blank" class="quick-link">Quiz page</a>
+      <a href="https://kaizen-summer-launch.vercel.app/" target="_blank" class="quick-link">Landing page</a>
+      <a href="https://supabase.com/dashboard/project/tgoxnqitdqyxtnoeaonc/editor" target="_blank" class="quick-link">Supabase — responses</a>
+      <a href="https://app.flodesk.com/segments" target="_blank" class="quick-link">Flodesk — segments</a>
+      <a href="https://app.flodesk.com/emails" target="_blank" class="quick-link">Flodesk — emails</a>
+      <a href="https://dashboard.stripe.com/payments" target="_blank" class="quick-link">Stripe — payments</a>
+      <a href="https://vercel.com/kaizenclimbing-cmds-projects/kaizen-summer-launch" target="_blank" class="quick-link">Vercel — deployments</a>
+      <a href="https://github.com/kaizenclimbing-cmd/kaizen-summer-launch" target="_blank" class="quick-link">GitHub — repo</a>
+    </div>
+  </div>
+
+  <!-- Email performance -->
+  <div class="email-perf" style="margin-bottom:56px;">
+    <div class="section-head">Email performance (Flodesk clickers)</div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Email</th>
+            <th>Date</th>
+            <th>Clickers</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="segments-body">
+          <tr><td colspan="4" class="empty-state">Loading...</td></tr>
+        </tbody>
+      </table>
     </div>
   </div>
 
@@ -386,16 +434,37 @@
       return;
     }
 
-    const { rows } = await res.json();
+    const { rows, segments } = await res.json();
 
     // Show main
     document.getElementById('login-screen').style.display = 'none';
     document.getElementById('main').style.display = 'block';
 
     renderStats(rows);
+    renderSegments(segments);
     renderTimeline();
     renderTable(rows);
     renderCountdown();
+  }
+
+  function renderSegments(segments) {
+    const tbody = document.getElementById('segments-body');
+    const today = new Date().toISOString().slice(0, 10);
+    tbody.innerHTML = segments.map(s => {
+      const sent = s.date && s.date <= today;
+      const status = !s.date ? '<span class="badge badge--yes">Live</span>'
+        : sent && s.hasSegment ? '<span class="badge badge--yes">Sent</span>'
+        : sent && !s.hasSegment ? '<span class="badge" style="background:#2a1820;color:var(--muted)">No segment</span>'
+        : '<span class="badge badge--no">Pending</span>';
+      const count = s.count !== null ? `<strong>${s.count}</strong>` : '<span style="color:var(--muted)">—</span>';
+      const date = s.date ? fmtDate(s.date) : '—';
+      return `<tr>
+        <td>${s.label}</td>
+        <td style="color:var(--muted)">${date}</td>
+        <td>${count}</td>
+        <td>${status}</td>
+      </tr>`;
+    }).join('');
   }
 
   function renderStats(rows) {

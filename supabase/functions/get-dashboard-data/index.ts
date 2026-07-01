@@ -3,6 +3,31 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 const DASHBOARD_SECRET = Deno.env.get('DASHBOARD_SECRET') ?? '';
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL') ?? '';
 const SUPABASE_SERVICE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '';
+const FLODESK_KEY = Deno.env.get('FLODESK_KEY') ?? '';
+
+// Segment IDs — replace null with real ID once segment is created in Flodesk
+const SEGMENTS = [
+  { label: 'Total waitlist',  id: '6a452f40ee8972aab8f36ac5', date: null },
+  { label: 'Warmup email 1',  id: null, date: '2026-07-14' },
+  { label: 'Warmup email 2',  id: null, date: '2026-07-17' },
+  { label: 'Warmup email 3',  id: null, date: '2026-07-21' },
+  { label: 'Sales email 1',   id: null, date: '2026-08-01' },
+  { label: 'Sales email 2',   id: null, date: '2026-08-03' },
+  { label: 'Sales email 3',   id: null, date: '2026-08-06' },
+  { label: 'Sales email 4',   id: null, date: '2026-08-09' },
+  { label: 'Last chance',     id: null, date: '2026-08-10' },
+];
+
+async function fetchSegmentCount(id: string): Promise<number | null> {
+  const res = await fetch(`https://api.flodesk.com/v1/segments/${id}`, {
+    headers: {
+      'Authorization': 'Basic ' + btoa(FLODESK_KEY + ':'),
+    },
+  });
+  if (!res.ok) return null;
+  const data = await res.json();
+  return data.total_active_subscribers ?? null;
+}
 
 Deno.serve(async (req) => {
   const corsHeaders = {
@@ -24,10 +49,10 @@ Deno.serve(async (req) => {
 
   const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
 
-  const { data, error } = await supabase
-    .from('summer_quiz_responses')
-    .select('*')
-    .order('created_at', { ascending: false });
+  const [{ data: rows, error }, ...segmentCounts] = await Promise.all([
+    supabase.from('summer_quiz_responses').select('*').order('created_at', { ascending: false }),
+    ...SEGMENTS.map(s => s.id ? fetchSegmentCount(s.id) : Promise.resolve(null)),
+  ]);
 
   if (error) {
     return new Response(JSON.stringify({ error: error.message }), {
@@ -36,7 +61,14 @@ Deno.serve(async (req) => {
     });
   }
 
-  return new Response(JSON.stringify({ rows: data }), {
+  const segments = SEGMENTS.map((s, i) => ({
+    label: s.label,
+    date: s.date,
+    count: segmentCounts[i],
+    hasSegment: !!s.id,
+  }));
+
+  return new Response(JSON.stringify({ rows, segments }), {
     headers: { ...corsHeaders, 'Content-Type': 'application/json' },
   });
 });
