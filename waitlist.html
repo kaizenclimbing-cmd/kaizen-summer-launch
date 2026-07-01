@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Summer Lock-In — Kaizen Climbing</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --dark: #1e1c14;
+    --gold: #c8a84b;
+    --cream: #f0eadc;
+    --muted: #9a9280;
+    --font: 'Georgia', serif;
+    --sans: system-ui, -apple-system, sans-serif;
+  }
+
+  body {
+    background: var(--dark);
+    color: var(--cream);
+    font-family: var(--sans);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 32px 24px;
+  }
+
+  .wrap {
+    max-width: 420px;
+    width: 100%;
+    text-align: center;
+  }
+
+  .logo {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--gold);
+    margin-bottom: 40px;
+  }
+
+  .headline {
+    font-family: var(--font);
+    font-size: 2rem;
+    line-height: 1.25;
+    margin-bottom: 16px;
+  }
+
+  .sub {
+    font-size: 1rem;
+    color: var(--muted);
+    line-height: 1.6;
+    margin-bottom: 12px;
+  }
+
+  .date-pill {
+    display: inline-block;
+    background: #2a2718;
+    border: 1px solid #3a3620;
+    border-radius: 20px;
+    padding: 6px 16px;
+    font-size: 0.8rem;
+    color: var(--gold);
+    margin-bottom: 36px;
+  }
+
+  .form { display: flex; flex-direction: column; gap: 12px; }
+
+  input[type="email"] {
+    background: #2a2718;
+    border: 1px solid #3a3620;
+    color: var(--cream);
+    padding: 16px 18px;
+    border-radius: 8px;
+    font-size: 1rem;
+    width: 100%;
+    text-align: center;
+    transition: border-color 0.2s;
+  }
+
+  input[type="email"]:focus {
+    outline: none;
+    border-color: var(--gold);
+  }
+
+  input[type="email"]::placeholder { color: var(--muted); }
+
+  .btn {
+    background: var(--gold);
+    color: var(--dark);
+    border: none;
+    padding: 16px;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s;
+    letter-spacing: 0.02em;
+  }
+
+  .btn:hover { background: #e0c068; }
+  .btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+  .small-print {
+    font-size: 0.75rem;
+    color: var(--muted);
+    margin-top: 12px;
+  }
+
+  /* Thank you state */
+  .thankyou { display: none; text-align: center; }
+
+  .check {
+    width: 56px;
+    height: 56px;
+    background: #1a3020;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 24px;
+    font-size: 1.5rem;
+  }
+
+  .thankyou h2 {
+    font-family: var(--font);
+    font-size: 1.6rem;
+    margin-bottom: 12px;
+  }
+
+  .thankyou p {
+    color: var(--muted);
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+
+  .divider {
+    border: none;
+    border-top: 1px solid #2a2718;
+    margin: 32px 0;
+  }
+
+  .bullets {
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 8px;
+  }
+
+  .bullet {
+    display: flex;
+    gap: 10px;
+    font-size: 0.9rem;
+    color: var(--muted);
+  }
+
+  .bullet span:first-child { color: var(--gold); flex-shrink: 0; }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <!-- Sign-up form -->
+  <div id="form-state">
+    <div class="logo">Kaizen Climbing</div>
+
+    <h1 class="headline">Get back in shape.<br>Peak for October.</h1>
+
+    <p class="sub">8-week structured bouldering programme.<br>Starting 11 August.</p>
+
+    <div class="date-pill">£18.75 a week — less than a wall session</div>
+
+    <form class="form" onsubmit="handleSubmit(event)">
+      <input type="email" id="email-input" placeholder="Your email address" required autocomplete="email" />
+      <button type="submit" class="btn" id="submit-btn">Get early access →</button>
+    </form>
+
+    <p class="small-print">No spam. Unsubscribe any time.</p>
+
+    <hr class="divider">
+
+    <div class="bullets">
+      <div class="bullet"><span>→</span><span>Personalised 8-week plan built around your schedule</span></div>
+      <div class="bullet"><span>→</span><span>Weekly education drops — technique, strength, recovery</span></div>
+      <div class="bullet"><span>→</span><span>Private community + coach support throughout</span></div>
+      <div class="bullet"><span>→</span><span>Built for boulderers targeting an October outdoor season</span></div>
+    </div>
+  </div>
+
+  <!-- Thank you -->
+  <div id="thankyou-state" class="thankyou">
+    <div class="check">✓</div>
+    <h2>You're on the list.</h2>
+    <p>I'll be in touch with details and early access before it opens to everyone.<br><br>Keep an eye on your inbox.</p>
+    <p style="margin-top:20px; font-size:0.8rem; color:var(--muted);">— Buster</p>
+  </div>
+
+</div>
+
+<script>
+  const ENDPOINT = 'https://tgoxnqitdqyxtnoeaonc.supabase.co/functions/v1/subscribe-waitlist';
+
+  // Pull UTM source from URL params
+  const utm = new URLSearchParams(window.location.search).get('utm_source') || 'instagram';
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    const email = document.getElementById('email-input').value.trim();
+    const btn = document.getElementById('submit-btn');
+
+    btn.disabled = true;
+    btn.textContent = 'Adding you...';
+
+    try {
+      await fetch(ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, utm_source: utm }),
+      });
+    } catch (err) {
+      console.error(err);
+    }
+
+    // Show thank you regardless — don't punish user for network issues
+    document.getElementById('form-state').style.display = 'none';
+    document.getElementById('thankyou-state').style.display = 'block';
+  }
+</script>
+</body>
+</html>
