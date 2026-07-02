@@ -491,6 +491,7 @@
       });
       if (!res.ok) throw new Error();
       sessionStorage.setItem('sg_unlocked', '1');
+      gtag('event', 'session_guide_signup', { method: 'email_gate' });
       document.getElementById('gate').style.display = 'none';
       document.getElementById('content').style.display = 'block';
       window.scrollTo(0, 0);
