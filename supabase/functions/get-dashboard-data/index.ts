@@ -8,8 +8,8 @@ const FLODESK_KEY = Deno.env.get('FLODESK_KEY') ?? '';
 // Segment IDs — replace null with real ID once segment is created in Flodesk
 const SEGMENTS = [
   { label: 'Total waitlist',  id: '6a452f40ee8972aab8f36ac5', date: null },
-  { label: 'Warmup email 1',  id: null, date: '2026-07-14' },
-  { label: 'Warmup email 2',  id: null, date: '2026-07-17' },
+  { label: 'Warmup email 1',  id: '6a46597d5074d2f12c6c09b0', date: '2026-07-02' },
+  { label: 'Warmup email 2',  id: '6a465498aac17ab8566993b3', date: '2026-07-17' },
   { label: 'Warmup email 3',  id: null, date: '2026-07-21' },
   { label: 'Sales email 1',   id: null, date: '2026-08-01' },
   { label: 'Sales email 2',   id: null, date: '2026-08-03' },
