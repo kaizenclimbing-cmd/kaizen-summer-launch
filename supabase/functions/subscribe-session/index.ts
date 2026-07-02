@@ -21,18 +21,19 @@ Deno.serve(async (req) => {
 
   const auth = 'Basic ' + btoa(FLODESK_KEY + ':');
 
-  // Upsert subscriber
-  await fetch('https://api.flodesk.com/v1/subscribers', {
+  // Upsert subscriber — response contains the ID needed for segment assignment
+  const upsertRes = await fetch('https://api.flodesk.com/v1/subscribers', {
     method: 'POST',
     headers: { 'Authorization': auth, 'Content-Type': 'application/json' },
     body: JSON.stringify({ email }),
   });
+  const subscriber = await upsertRes.json();
 
-  // Add to summer sessions segment
-  await fetch(`https://api.flodesk.com/v1/segments/${SESSION_SEGMENT_ID}/subscribers`, {
+  // Add to summer sessions segment using subscriber ID
+  await fetch(`https://api.flodesk.com/v1/subscribers/${subscriber.id}/segments`, {
     method: 'POST',
     headers: { 'Authorization': auth, 'Content-Type': 'application/json' },
-    body: JSON.stringify({ emails: [email] }),
+    body: JSON.stringify({ segment_ids: [SESSION_SEGMENT_ID] }),
   });
 
   return new Response(JSON.stringify({ ok: true }), {

@@ -23,13 +23,14 @@ Deno.serve(async (req) => {
   const auth = 'Basic ' + btoa(FLODESK_KEY + ':');
 
   // Upsert subscriber then add to segment
-  await fetch('https://api.flodesk.com/v1/subscribers', {
+  const upsertRes = await fetch('https://api.flodesk.com/v1/subscribers', {
     method: 'POST',
     headers: { 'Authorization': auth, 'Content-Type': 'application/json' },
     body: JSON.stringify({ email, custom_fields: { utm_source: utm_source ?? 'instagram' } }),
   });
+  const subscriber = await upsertRes.json();
 
-  await fetch(`https://api.flodesk.com/v1/subscribers/${encodeURIComponent(email)}/segments`, {
+  await fetch(`https://api.flodesk.com/v1/subscribers/${subscriber.id}/segments`, {
     method: 'POST',
     headers: { 'Authorization': auth, 'Content-Type': 'application/json' },
     body: JSON.stringify({ segment_ids: [WAITLIST_SEGMENT_ID] }),
