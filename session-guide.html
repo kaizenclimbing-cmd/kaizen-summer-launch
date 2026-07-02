@@ -262,6 +262,80 @@
     font-size: 0.8rem;
     color: var(--muted);
   }
+  /* ── Email gate ── */
+  #gate {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 32px 24px;
+  }
+
+  #gate .inner {
+    max-width: 420px;
+    width: 100%;
+    text-align: center;
+  }
+
+  #gate .logo { margin-bottom: 48px; }
+
+  #gate h1 {
+    font-family: var(--font);
+    font-size: 1.8rem;
+    margin-bottom: 12px;
+  }
+
+  #gate p {
+    color: var(--muted);
+    font-size: 0.95rem;
+    line-height: 1.7;
+    margin-bottom: 28px;
+  }
+
+  #gate-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  #gate-form input {
+    width: 100%;
+    background: var(--dark-2);
+    border: 1px solid #3a3620;
+    border-radius: 4px;
+    padding: 14px 16px;
+    color: var(--cream);
+    font-size: 1rem;
+    outline: none;
+    font-family: var(--sans);
+  }
+
+  #gate-form input:focus { border-color: var(--gold); }
+  #gate-form input::placeholder { color: var(--muted); }
+
+  #gate-form button {
+    background: var(--gold);
+    color: var(--dark);
+    border: none;
+    border-radius: 4px;
+    padding: 14px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    letter-spacing: 0.02em;
+  }
+
+  #gate-form button:hover { background: var(--gold-light); }
+  #gate-form button:disabled { opacity: 0.6; cursor: default; }
+
+  #gate-error {
+    font-size: 0.85rem;
+    color: #e07070;
+    display: none;
+    margin-top: 4px;
+  }
+
+  #content { display: none; }
 </style>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-X4W470YSQ6"></script>
@@ -274,6 +348,22 @@
 </head>
 <body>
 
+<!-- Email gate -->
+<div id="gate">
+  <div class="inner">
+    <div class="logo">Kaizen Climbing</div>
+    <h1>The Summer One-Off Session</h1>
+    <p>Enter your email to get the session guide — fingers, bouldering, pull-ups, all in one place.</p>
+    <form id="gate-form">
+      <input type="email" id="gate-email" placeholder="your@email.com" required autocomplete="email">
+      <button type="submit">Send me the guide</button>
+      <div id="gate-error">Something went wrong — try again.</div>
+    </form>
+  </div>
+</div>
+
+<!-- Session content (hidden until email submitted) -->
+<div id="content">
 <div class="wrap">
 
   <div class="logo">Kaizen Climbing</div>
@@ -372,6 +462,44 @@
   </div>
 
 </div>
+</div><!-- /content -->
+
+<script>
+  const EDGE = 'https://tgoxnqitdqyxtnoeaonc.supabase.co/functions/v1/subscribe-session';
+
+  // If already submitted this session, skip gate
+  if (sessionStorage.getItem('sg_unlocked')) {
+    document.getElementById('gate').style.display = 'none';
+    document.getElementById('content').style.display = 'block';
+  }
+
+  document.getElementById('gate-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = e.target.querySelector('button');
+    const err = document.getElementById('gate-error');
+    const email = document.getElementById('gate-email').value.trim();
+    btn.disabled = true;
+    btn.textContent = 'One sec...';
+    err.style.display = 'none';
+
+    try {
+      const res = await fetch(EDGE, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      });
+      if (!res.ok) throw new Error();
+      sessionStorage.setItem('sg_unlocked', '1');
+      document.getElementById('gate').style.display = 'none';
+      document.getElementById('content').style.display = 'block';
+      window.scrollTo(0, 0);
+    } catch {
+      err.style.display = 'block';
+      btn.disabled = false;
+      btn.textContent = 'Send me the guide';
+    }
+  });
+</script>
 
 </body>
 </html>
