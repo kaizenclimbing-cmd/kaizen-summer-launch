@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>You're on the list — Kaizen Climbing</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --dark: #1e1c14;
+    --dark-2: #2a2718;
+    --gold: #c8a84b;
+    --cream: #f0eadc;
+    --muted: #9a9280;
+    --green: #4caf74;
+    --font: 'Georgia', serif;
+    --sans: system-ui, -apple-system, sans-serif;
+  }
+  body {
+    background: var(--dark);
+    color: var(--cream);
+    font-family: var(--sans);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 32px 24px;
+  }
+  .wrap { max-width: 440px; width: 100%; text-align: center; }
+  .logo { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.14em; color: var(--gold); margin-bottom: 48px; }
+  .check { width: 64px; height: 64px; background: #1a3020; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 28px; font-size: 1.6rem; color: var(--green); }
+  h1 { font-family: var(--font); font-size: 1.8rem; margin-bottom: 16px; }
+  p { color: var(--muted); font-size: 0.95rem; line-height: 1.7; margin-bottom: 12px; }
+  .sign-off { margin-top: 32px; font-size: 0.85rem; color: var(--muted); }
+  .divider { border: none; border-top: 1px solid #2a2718; margin: 36px 0; }
+  .session-link { display: block; background: var(--dark-2); border: 1px solid #3a3620; border-radius: 8px; padding: 20px 24px; text-decoration: none; color: var(--cream); transition: border-color 0.15s; }
+  .session-link:hover { border-color: var(--gold); }
+  .session-link-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--gold); margin-bottom: 6px; }
+  .session-link-title { font-family: var(--font); font-size: 1.1rem; margin-bottom: 4px; }
+  .session-link-sub { font-size: 0.8rem; color: var(--muted); }
+</style>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-X4W470YSQ6"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+  gtag("config", "G-X4W470YSQ6");
+</script>
+</head>
+<body>
+<div class="wrap">
+  <div class="logo">Kaizen Climbing</div>
+  <div class="check">✓</div>
+  <h1>You're on the list.</h1>
+  <p>I'll be in touch before it opens with details and early access. Keep an eye on your inbox.</p>
+  <p class="sign-off">— Buster</p>
+  <hr class="divider">
+  <a href="/session-guide.html" class="session-link">
+    <div class="session-link-label">While you wait</div>
+    <div class="session-link-title">The Summer One-Off Session Guide</div>
+    <div class="session-link-sub">The session from the email — fingers, bouldering, pull-ups — in an easy to follow format.</div>
+  </a>
+</div>
+</body>
+</html>
