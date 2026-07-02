@@ -458,18 +458,22 @@
   <div class="cta-block">
     <h2>Want a full 8-week structure?</h2>
     <p>I'm running a bouldering programme through August and September. Personalised plan, weekly education, coach support. Starting 11 August.</p>
-    <a href="https://kaizen-summer-launch.vercel.app/waitlist.html?utm_source=session_guide" class="btn">Join the waitlist →</a>
-    <p class="cta-sub">£150 for 8 weeks — £18.75 a week</p>
+    <button class="btn" id="waitlist-btn" onclick="joinWaitlist()">Join the waitlist →</button>
+    <p class="cta-sub" id="waitlist-sub">£150 for 8 weeks — £18.75 a week</p>
   </div>
 
 </div>
 </div><!-- /content -->
 
 <script>
-  const EDGE = 'https://tgoxnqitdqyxtnoeaonc.supabase.co/functions/v1/subscribe-session';
+  const SESSION_EDGE = 'https://tgoxnqitdqyxtnoeaonc.supabase.co/functions/v1/subscribe-session';
+  const WAITLIST_EDGE = 'https://tgoxnqitdqyxtnoeaonc.supabase.co/functions/v1/subscribe-waitlist';
+
+  let capturedEmail = '';
 
   // If already submitted this session, skip gate
   if (sessionStorage.getItem('sg_unlocked')) {
+    capturedEmail = sessionStorage.getItem('sg_email') || '';
     document.getElementById('gate').style.display = 'none';
     document.getElementById('content').style.display = 'block';
   }
@@ -484,13 +488,15 @@
     err.style.display = 'none';
 
     try {
-      const res = await fetch(EDGE, {
+      const res = await fetch(SESSION_EDGE, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email }),
       });
       if (!res.ok) throw new Error();
+      capturedEmail = email;
       sessionStorage.setItem('sg_unlocked', '1');
+      sessionStorage.setItem('sg_email', email);
       gtag('event', 'session_guide_signup', { method: 'email_gate' });
       document.getElementById('gate').style.display = 'none';
       document.getElementById('content').style.display = 'block';
@@ -498,9 +504,30 @@
     } catch {
       err.style.display = 'block';
       btn.disabled = false;
-      btn.textContent = 'Send me the guide';
+      btn.textContent = 'View the session';
     }
   });
+
+  async function joinWaitlist() {
+    const btn = document.getElementById('waitlist-btn');
+    if (!capturedEmail) return;
+    btn.disabled = true;
+    btn.textContent = 'Adding you...';
+    try {
+      await fetch(WAITLIST_EDGE, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: capturedEmail, utm_source: 'session_guide' }),
+      });
+      gtag('event', 'waitlist_signup', { method: 'session_guide_cta' });
+      btn.textContent = "You're on the list";
+      btn.style.background = '#4caf74';
+      document.getElementById('waitlist-sub').textContent = "I'll be in touch before it opens.";
+    } catch {
+      btn.disabled = false;
+      btn.textContent = 'Join the waitlist →';
+    }
+  }
 </script>
 
 </body>

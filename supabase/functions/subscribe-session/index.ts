@@ -29,7 +29,7 @@ Deno.serve(async (req) => {
   });
   const subscriber = await upsertRes.json();
 
-  // Add to summer sessions segment using subscriber ID
+  // Add to summer sessions segment
   await fetch(`https://api.flodesk.com/v1/subscribers/${subscriber.id}/segments`, {
     method: 'POST',
     headers: { 'Authorization': auth, 'Content-Type': 'application/json' },
