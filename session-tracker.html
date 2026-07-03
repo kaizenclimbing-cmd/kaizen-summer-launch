@@ -603,12 +603,16 @@ if (localStorage.getItem('kc_session')) { restoreState(); } else { goTo(2); }
 
 // ── Navigation ────────────────────────────────────────────────────────────────
 
+const STEP_NAMES = { 2: 'fingers_ramp', 3: 'fingers_working', 4: 'bouldering', 5: 'pullups' };
+
 function goTo(n) {
   document.getElementById('step-done').style.display = 'none';
   document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
 
   currentStep = n;
   saveState();
+
+  if (STEP_NAMES[n]) gtag('event', 'tracker_step', { step: STEP_NAMES[n], step_num: n - 1 });
 
   const el = document.getElementById(`step-${n}`);
   if (el) { el.classList.add('active'); window.scrollTo(0, 0); }
