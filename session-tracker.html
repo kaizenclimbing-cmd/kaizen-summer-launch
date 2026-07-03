@@ -22,19 +22,29 @@
     --sans: system-ui, -apple-system, sans-serif;
   }
 
+  html, body {
+    height: 100%;
+    overflow: hidden;
+  }
+
   body {
     background: var(--bg);
     color: var(--dark);
     font-family: var(--sans);
     font-size: 16px;
     line-height: 1.6;
-    min-height: 100vh;
+  }
+
+  #app {
+    position: relative;
+    height: 100%;
+    overflow: hidden;
   }
 
   /* ── Step layout ── */
   .step {
     display: none;
-    position: fixed;
+    position: absolute;
     inset: 0;
     flex-direction: column;
     background: var(--bg);
@@ -425,6 +435,7 @@
 </script>
 </head>
 <body>
+<div id="app">
 
 <!-- ── Step 2: Fingers — Ramp sets ── -->
 <div class="step" id="step-2">
@@ -799,9 +810,7 @@ function resetSession() {
   goTo(2);
 }
 
-// Init
-buildSets();
-restoreState();
 </script>
+</div>
 </body>
 </html>
