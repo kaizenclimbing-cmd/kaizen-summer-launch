@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Session Tracker — Kaizen Climbing</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --dark: #1e1c14; --dark-2: #2a2718; --dark-3: #332f1e;
+    --gold: #c8a84b; --gold-light: #e0c068;
+    --cream: #f0eadc; --muted: #9a9280; --green: #4caf74;
+    --font: 'Georgia', serif; --sans: system-ui, -apple-system, sans-serif;
+  }
+  body { background: var(--dark); color: var(--cream); font-family: var(--sans); font-size: 16px; line-height: 1.6; }
+  .wrap { max-width: 600px; margin: 0 auto; padding: 48px 20px 100px; }
+  .logo { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.14em; color: var(--gold); margin-bottom: 40px; }
+
+  /* Gate */
+  #gate { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 32px 20px; }
+  #gate .inner { max-width: 400px; width: 100%; text-align: center; }
+  #gate h1 { font-family: var(--font); font-size: 1.8rem; margin-bottom: 12px; }
+  #gate p { color: var(--muted); font-size: 0.95rem; margin-bottom: 28px; line-height: 1.7; }
+  #gate-form { display: flex; flex-direction: column; gap: 12px; }
+  #gate-form input { background: var(--dark-2); border: 1px solid #3a3620; border-radius: 4px; padding: 14px 16px; color: var(--cream); font-size: 1rem; outline: none; font-family: var(--sans); }
+  #gate-form input:focus { border-color: var(--gold); }
+  #gate-form input::placeholder { color: var(--muted); }
+  #gate-sub { font-size: 0.78rem; color: var(--muted); margin-top: 12px; line-height: 1.6; }
+
+  /* Blocks */
+  #tracker { display: none; }
+  .block { background: var(--dark-2); border: 1px solid #3a3620; border-radius: 8px; padding: 24px; margin-bottom: 20px; }
+  .block-header { display: flex; align-items: center; gap: 16px; margin-bottom: 20px; }
+  .block-num { font-family: var(--font); font-size: 2rem; color: #3a3620; line-height: 1; flex-shrink: 0; width: 40px; }
+  .block-title { font-family: var(--font); font-size: 1.2rem; }
+  .block-time { font-size: 0.8rem; color: var(--gold); }
+  .block-done { margin-left: auto; width: 28px; height: 28px; border-radius: 50%; border: 2px solid #3a3620; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.2s; background: transparent; color: transparent; font-size: 0.9rem; }
+  .block-done.checked { background: var(--green); border-color: var(--green); color: #fff; }
+
+  /* Set rows */
+  .set-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 10px; }
+  .set-row { display: grid; grid-template-columns: 32px 1fr 1fr auto; gap: 8px; align-items: center; margin-bottom: 8px; }
+  .set-num { font-size: 0.8rem; color: var(--muted); text-align: center; }
+  .set-input { background: var(--dark-3); border: 1px solid #3a3620; border-radius: 4px; padding: 8px 10px; color: var(--cream); font-size: 0.9rem; font-family: var(--sans); outline: none; width: 100%; }
+  .set-input:focus { border-color: var(--gold); }
+  .set-input::placeholder { color: #5a5540; }
+  .set-check { width: 28px; height: 28px; border-radius: 4px; border: 2px solid #3a3620; background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; color: transparent; font-size: 0.85rem; flex-shrink: 0; transition: all 0.15s; }
+  .set-check.checked { background: var(--green); border-color: var(--green); color: #fff; }
+
+  /* Timer */
+  .timer-wrap { margin-top: 16px; display: none; }
+  .timer-wrap.visible { display: block; }
+  .timer-bar-bg { background: #3a3620; border-radius: 4px; height: 4px; margin-bottom: 10px; overflow: hidden; }
+  .timer-bar { background: var(--gold); height: 4px; border-radius: 4px; transition: width 1s linear; }
+  .timer-display { display: flex; justify-content: space-between; align-items: center; }
+  .timer-count { font-family: var(--font); font-size: 1.6rem; color: var(--gold); }
+  .timer-label { font-size: 0.75rem; color: var(--muted); }
+  .timer-skip { font-size: 0.75rem; color: var(--muted); cursor: pointer; text-decoration: underline; }
+
+  /* Divider label */
+  .section-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin: 24px 0 12px; display: flex; align-items: center; gap: 12px; }
+  .section-label::after { content: ''; flex: 1; height: 1px; background: #3a3620; }
+
+  /* Notes */
+  .notes-input { width: 100%; background: var(--dark-3); border: 1px solid #3a3620; border-radius: 4px; padding: 12px; color: var(--cream); font-size: 0.9rem; font-family: var(--sans); resize: vertical; min-height: 80px; outline: none; margin-top: 8px; }
+  .notes-input:focus { border-color: var(--gold); }
+  .notes-input::placeholder { color: #5a5540; }
+
+  /* Bouldering checkboxes */
+  .boulder-step { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 12px; cursor: pointer; }
+  .boulder-check { width: 22px; height: 22px; border-radius: 4px; border: 2px solid #3a3620; background: transparent; flex-shrink: 0; display: flex; align-items: center; justify-content: center; color: transparent; font-size: 0.75rem; transition: all 0.15s; margin-top: 2px; }
+  .boulder-check.checked { background: var(--green); border-color: var(--green); color: #fff; }
+  .boulder-text { font-size: 0.9rem; color: var(--muted); line-height: 1.5; }
+  .boulder-text strong { color: var(--cream); }
+
+  /* Finish */
+  .finish-wrap { text-align: center; margin-top: 32px; }
+  .btn-finish { background: var(--gold); color: var(--dark); border: none; border-radius: 4px; padding: 16px 48px; font-size: 1rem; font-weight: 700; cursor: pointer; letter-spacing: 0.02em; width: 100%; }
+  .btn-finish:hover { background: var(--gold-light); }
+  .btn-finish:disabled { opacity: 0.5; cursor: default; }
+
+  /* Done state */
+  #done { display: none; text-align: center; min-height: 100vh; align-items: center; justify-content: center; padding: 32px 20px; }
+  #done .inner { max-width: 400px; width: 100%; }
+  .check-circle { width: 64px; height: 64px; background: #1a3020; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px; font-size: 1.6rem; color: var(--green); }
+  #done h1 { font-family: var(--font); font-size: 1.8rem; margin-bottom: 12px; }
+  #done p { color: var(--muted); font-size: 0.95rem; line-height: 1.7; }
+
+  /* Util */
+  .btn { display: inline-block; background: var(--gold); color: var(--dark); font-weight: 700; font-size: 1rem; padding: 14px 32px; border-radius: 4px; border: none; cursor: pointer; }
+  .btn:hover { background: var(--gold-light); }
+  .note-box { background: var(--dark-3); border-left: 2px solid var(--gold); padding: 10px 14px; font-size: 0.85rem; color: var(--muted); border-radius: 0 4px 4px 0; margin-top: 12px; }
+  .note-box strong { color: var(--cream); }
+  #gate-error, .form-error { font-size: 0.85rem; color: #e07070; display: none; margin-top: 4px; }
+  .progress { display: flex; gap: 6px; margin-bottom: 32px; }
+  .progress-dot { flex: 1; height: 3px; border-radius: 2px; background: #3a3620; transition: background 0.3s; }
+  .progress-dot.active { background: var(--gold); }
+</style>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-X4W470YSQ6"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+  gtag("config", "G-X4W470YSQ6");
+</script>
+</head>
+<body>
+
+<!-- Gate -->
+<div id="gate">
+  <div class="inner">
+    <div class="logo">Kaizen Climbing</div>
+    <h1>Session Tracker</h1>
+    <p>Log your sets, weights, and rest times. Get a summary emailed to you when you're done.</p>
+    <form id="gate-form">
+      <input type="email" id="gate-email" placeholder="your@email.com" required autocomplete="email">
+      <button type="submit" class="btn" style="width:100%;padding:14px;">Start session</button>
+      <div id="gate-error" class="form-error">Something went wrong — try again.</div>
+    </form>
+    <p id="gate-sub">I'll add you to my email list for free training tips and info on offers. Unsubscribe anytime.</p>
+  </div>
+</div>
+
+<!-- Tracker -->
+<div id="tracker">
+  <div class="wrap">
+    <div class="logo">Kaizen Climbing</div>
+
+    <div class="progress">
+      <div class="progress-dot" id="p1"></div>
+      <div class="progress-dot" id="p2"></div>
+      <div class="progress-dot" id="p3"></div>
+    </div>
+
+    <!-- Block 1: Fingers -->
+    <div class="block" id="block-fingers">
+      <div class="block-header">
+        <div class="block-num">01</div>
+        <div>
+          <div class="block-title">Fingers</div>
+          <div class="block-time">~20 min</div>
+        </div>
+        <button class="block-done" id="done-fingers" onclick="toggleBlock('fingers')" title="Mark complete">✓</button>
+      </div>
+
+      <div class="note-box" style="margin-bottom:16px;">Start with two hands on a 20mm edge. Ramp up over 3–5 hangs to find your working weight — heavy but still a few seconds from failure.</div>
+
+      <div class="section-label">Ramp sets</div>
+      <div id="ramp-sets">
+        <!-- Generated by JS -->
+      </div>
+
+      <div class="section-label" style="margin-top:20px;">Working sets (3 × 7s)</div>
+      <div id="work-sets">
+        <!-- Generated by JS -->
+      </div>
+
+      <div class="timer-wrap" id="fingers-timer">
+        <div class="timer-bar-bg"><div class="timer-bar" id="fingers-bar" style="width:100%"></div></div>
+        <div class="timer-display">
+          <div>
+            <div class="timer-count" id="fingers-count">2:00</div>
+            <div class="timer-label">rest</div>
+          </div>
+          <span class="timer-skip" onclick="stopTimer('fingers')">skip →</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Block 2: Bouldering -->
+    <div class="block" id="block-bouldering">
+      <div class="block-header">
+        <div class="block-num">02</div>
+        <div>
+          <div class="block-title">Bouldering</div>
+          <div class="block-time">~40 min</div>
+        </div>
+        <button class="block-done" id="done-bouldering" onclick="toggleBlock('bouldering')" title="Mark complete">✓</button>
+      </div>
+
+      <div class="note-box" style="margin-bottom:16px;">Forget grades. Controlled climbing only — the strength work is already done.</div>
+
+      <div class="section-label">Tick off as you go</div>
+
+      <div class="boulder-step" onclick="toggleBoulder(0)">
+        <div class="boulder-check" id="bc0">✓</div>
+        <div class="boulder-text">Warm up through the grades until things start to feel challenging.</div>
+      </div>
+      <div class="boulder-step" onclick="toggleBoulder(1)">
+        <div class="boulder-check" id="bc1">✓</div>
+        <div class="boulder-text"><strong>Project zone</strong> — 3–5 problems taking 1–3 attempts each.</div>
+      </div>
+      <div class="boulder-step" onclick="toggleBoulder(2)">
+        <div class="boulder-check" id="bc2">✓</div>
+        <div class="boulder-text"><strong>Movement focus</strong> — drop a grade, work foot placement and grip tension.</div>
+      </div>
+
+      <div style="margin-top:16px;">
+        <div class="set-label">Notes (grade range, how it felt)</div>
+        <textarea class="notes-input" id="boulder-notes" placeholder="e.g. V4–V6, first session back felt rough but movement improved by the end"></textarea>
+      </div>
+    </div>
+
+    <!-- Block 3: Pull-ups -->
+    <div class="block" id="block-pullups">
+      <div class="block-header">
+        <div class="block-num">03</div>
+        <div>
+          <div class="block-title">Pull-ups</div>
+          <div class="block-time">~10 min</div>
+        </div>
+        <button class="block-done" id="done-pullups" onclick="toggleBlock('pullups')" title="Mark complete">✓</button>
+      </div>
+
+      <div class="note-box" style="margin-bottom:16px;">3 sets of 6. Leave ~3 reps in the tank. Add weight if bodyweight feels easy.</div>
+
+      <div class="section-label">Sets</div>
+      <div id="pullup-sets">
+        <!-- Generated by JS -->
+      </div>
+
+      <div class="timer-wrap" id="pullups-timer">
+        <div class="timer-bar-bg"><div class="timer-bar" id="pullups-bar" style="width:100%"></div></div>
+        <div class="timer-display">
+          <div>
+            <div class="timer-count" id="pullups-count">2:00</div>
+            <div class="timer-label">rest</div>
+          </div>
+          <span class="timer-skip" onclick="stopTimer('pullups')">skip →</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Session notes -->
+    <div class="block">
+      <div class="set-label">Session notes (optional)</div>
+      <textarea class="notes-input" id="session-notes" placeholder="How did it feel overall? Anything to note for next time?"></textarea>
+    </div>
+
+    <!-- Finish -->
+    <div class="finish-wrap">
+      <button class="btn-finish" id="btn-finish" onclick="finishSession()">Log session + get email summary</button>
+      <div class="form-error" id="finish-error" style="display:none;margin-top:8px;">Something went wrong — try again.</div>
+    </div>
+  </div>
+</div>
+
+<!-- Done -->
+<div id="done" style="display:flex;">
+  <div class="inner" style="display:none;" id="done-inner">
+    <div class="logo">Kaizen Climbing</div>
+    <div class="check-circle">✓</div>
+    <h1>Session logged.</h1>
+    <p style="margin-bottom:24px;">Summary on its way to your inbox. Good session.</p>
+    <button class="btn" onclick="resetSession()">Log another session</button>
+  </div>
+</div>
+
+<script>
+const SESSION_EDGE = 'https://tgoxnqitdqyxtnoeaonc.supabase.co/functions/v1/subscribe-session';
+const LOG_EDGE    = 'https://tgoxnqitdqyxtnoeaonc.supabase.co/functions/v1/log-session';
+
+let capturedEmail = '';
+let timers = {};
+let blockState = { fingers: false, bouldering: false, pullups: false };
+let boulderState = [false, false, false];
+
+// ── Gate ────────────────────────────────────────────────────────────────────
+
+const stored = localStorage.getItem('kc_tracker_email');
+if (stored) {
+  capturedEmail = stored;
+  showTracker();
+}
+
+document.getElementById('gate-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const btn = e.target.querySelector('button');
+  const err = document.getElementById('gate-error');
+  const email = document.getElementById('gate-email').value.trim();
+  btn.disabled = true; btn.textContent = 'One sec...';
+  err.style.display = 'none';
+  try {
+    await fetch(SESSION_EDGE, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email }),
+    });
+    capturedEmail = email;
+    localStorage.setItem('kc_tracker_email', email);
+    gtag('event', 'tracker_gate_submit');
+    showTracker();
+  } catch {
+    err.style.display = 'block';
+    btn.disabled = false; btn.textContent = 'Start session';
+  }
+});
+
+function showTracker() {
+  document.getElementById('gate').style.display = 'none';
+  document.getElementById('done').style.display = 'none';
+  document.getElementById('tracker').style.display = 'block';
+  buildSets();
+  restoreState();
+}
+
+// ── Build set rows ───────────────────────────────────────────────────────────
+
+function buildSets() {
+  // Ramp sets (5 hangs)
+  const ramp = document.getElementById('ramp-sets');
+  ramp.innerHTML = '';
+  for (let i = 1; i <= 5; i++) {
+    ramp.innerHTML += setRow(`ramp-${i}`, i, 'Weight (kg or BW)', 'Duration (s)', `fingers-ramp-${i}`);
+  }
+
+  // Working sets (3)
+  const work = document.getElementById('work-sets');
+  work.innerHTML = '';
+  for (let i = 1; i <= 3; i++) {
+    work.innerHTML += setRow(`work-${i}`, i, 'Weight (kg or BW)', '7s', `fingers-work-${i}`, true);
+  }
+
+  // Pull-up sets (3)
+  const pu = document.getElementById('pullup-sets');
+  pu.innerHTML = '';
+  for (let i = 1; i <= 3; i++) {
+    pu.innerHTML += setRow(`pu-${i}`, i, 'Reps', 'Weight (kg)', `pullups-pu-${i}`);
+  }
+
+  // Attach check listeners
+  document.querySelectorAll('.set-check').forEach(el => {
+    el.addEventListener('click', () => {
+      el.classList.toggle('checked');
+      if (el.classList.contains('checked')) {
+        const block = el.dataset.block;
+        if (block) startTimer(block);
+      }
+      saveState();
+      updateProgress();
+    });
+  });
+
+  // Attach input listeners
+  document.querySelectorAll('.set-input').forEach(el => {
+    el.addEventListener('input', () => { saveState(); });
+  });
+}
+
+function setRow(id, num, p1, p2, blockKey, fixedDuration = false) {
+  const col2 = fixedDuration
+    ? `<div class="set-input" style="opacity:0.4;font-size:0.85rem;padding:8px 10px;">7 seconds</div>`
+    : `<input class="set-input" id="${id}-dur" placeholder="${p2}" type="text">`;
+  return `
+    <div class="set-row">
+      <div class="set-num">${num}</div>
+      <input class="set-input" id="${id}-wt" placeholder="${p1}" type="text">
+      ${col2}
+      <div class="set-check" id="${id}-check" data-block="${blockKey.split('-')[0]}">✓</div>
+    </div>`;
+}
+
+// ── Timers ───────────────────────────────────────────────────────────────────
+
+function startTimer(block, seconds = 120) {
+  stopTimer(block);
+  const wrap = document.getElementById(`${block}-timer`);
+  const count = document.getElementById(`${block}-count`);
+  const bar   = document.getElementById(`${block}-bar`);
+  if (!wrap) return;
+  wrap.classList.add('visible');
+  let remaining = seconds;
+  bar.style.width = '100%';
+  count.textContent = fmt(remaining);
+  timers[block] = setInterval(() => {
+    remaining--;
+    count.textContent = fmt(remaining);
+    bar.style.width = (remaining / seconds * 100) + '%';
+    if (remaining <= 0) stopTimer(block);
+  }, 1000);
+}
+
+function stopTimer(block) {
+  clearInterval(timers[block]);
+  const wrap = document.getElementById(`${block}-timer`);
+  if (wrap) wrap.classList.remove('visible');
+}
+
+function fmt(s) {
+  const m = Math.floor(s / 60);
+  const sec = s % 60;
+  return `${m}:${sec.toString().padStart(2, '0')}`;
+}
+
+// ── Block done buttons ───────────────────────────────────────────────────────
+
+function toggleBlock(name) {
+  blockState[name] = !blockState[name];
+  const btn = document.getElementById(`done-${name}`);
+  btn.classList.toggle('checked', blockState[name]);
+  updateProgress();
+  saveState();
+}
+
+// ── Bouldering steps ─────────────────────────────────────────────────────────
+
+function toggleBoulder(i) {
+  boulderState[i] = !boulderState[i];
+  const el = document.getElementById(`bc${i}`);
+  el.classList.toggle('checked', boulderState[i]);
+  saveState();
+}
+
+// ── Progress dots ────────────────────────────────────────────────────────────
+
+function updateProgress() {
+  document.getElementById('p1').classList.toggle('active', blockState.fingers);
+  document.getElementById('p2').classList.toggle('active', blockState.bouldering);
+  document.getElementById('p3').classList.toggle('active', blockState.pullups);
+}
+
+// ── Persist state in localStorage ───────────────────────────────────────────
+
+function saveState() {
+  const state = {
+    blockState, boulderState,
+    boulderNotes: document.getElementById('boulder-notes')?.value,
+    sessionNotes: document.getElementById('session-notes')?.value,
+    sets: {}
+  };
+  ['ramp-1','ramp-2','ramp-3','ramp-4','ramp-5','work-1','work-2','work-3'].forEach(id => {
+    state.sets[id] = {
+      wt: document.getElementById(`${id}-wt`)?.value,
+      dur: document.getElementById(`${id}-dur`)?.value,
+      checked: document.getElementById(`${id}-check`)?.classList.contains('checked'),
+    };
+  });
+  ['pu-1','pu-2','pu-3'].forEach(id => {
+    state.sets[id] = {
+      wt: document.getElementById(`${id}-wt`)?.value,
+      dur: document.getElementById(`${id}-dur`)?.value,
+      checked: document.getElementById(`${id}-check`)?.classList.contains('checked'),
+    };
+  });
+  localStorage.setItem('kc_session_state', JSON.stringify(state));
+}
+
+function restoreState() {
+  const raw = localStorage.getItem('kc_session_state');
+  if (!raw) return;
+  try {
+    const state = JSON.parse(raw);
+    blockState = state.blockState || blockState;
+    boulderState = state.boulderState || boulderState;
+    if (state.boulderNotes) document.getElementById('boulder-notes').value = state.boulderNotes;
+    if (state.sessionNotes) document.getElementById('session-notes').value = state.sessionNotes;
+    Object.entries(state.sets || {}).forEach(([id, s]) => {
+      if (document.getElementById(`${id}-wt`)) document.getElementById(`${id}-wt`).value = s.wt || '';
+      if (document.getElementById(`${id}-dur`)) document.getElementById(`${id}-dur`).value = s.dur || '';
+      if (s.checked) document.getElementById(`${id}-check`)?.classList.add('checked');
+    });
+    boulderState.forEach((v, i) => {
+      if (v) document.getElementById(`bc${i}`)?.classList.add('checked');
+    });
+    Object.keys(blockState).forEach(k => {
+      if (blockState[k]) document.getElementById(`done-${k}`)?.classList.add('checked');
+    });
+    updateProgress();
+  } catch {}
+}
+
+// ── Finish ───────────────────────────────────────────────────────────────────
+
+async function finishSession() {
+  const btn = document.getElementById('btn-finish');
+  const err = document.getElementById('finish-error');
+  btn.disabled = true; btn.textContent = 'Saving...';
+  err.style.display = 'none';
+
+  const getVal = id => document.getElementById(id)?.value || '';
+  const isChecked = id => document.getElementById(id)?.classList.contains('checked');
+
+  const fingers = {
+    sets: [
+      { type: 'ramp', weight: getVal('ramp-1-wt'), duration: getVal('ramp-1-dur'), completed: isChecked('ramp-1-check') },
+      { type: 'ramp', weight: getVal('ramp-2-wt'), duration: getVal('ramp-2-dur'), completed: isChecked('ramp-2-check') },
+      { type: 'ramp', weight: getVal('ramp-3-wt'), duration: getVal('ramp-3-dur'), completed: isChecked('ramp-3-check') },
+      { type: 'ramp', weight: getVal('ramp-4-wt'), duration: getVal('ramp-4-dur'), completed: isChecked('ramp-4-check') },
+      { type: 'ramp', weight: getVal('ramp-5-wt'), duration: getVal('ramp-5-dur'), completed: isChecked('ramp-5-check') },
+      { type: 'work', weight: getVal('work-1-wt'), duration: '7', completed: isChecked('work-1-check') },
+      { type: 'work', weight: getVal('work-2-wt'), duration: '7', completed: isChecked('work-2-check') },
+      { type: 'work', weight: getVal('work-3-wt'), duration: '7', completed: isChecked('work-3-check') },
+    ],
+    completed: blockState.fingers,
+  };
+
+  const bouldering = {
+    steps: boulderState,
+    notes: getVal('boulder-notes'),
+    completed: blockState.bouldering,
+  };
+
+  const pullups = {
+    sets: [
+      { reps: getVal('pu-1-wt'), weight: getVal('pu-1-dur'), completed: isChecked('pu-1-check') },
+      { reps: getVal('pu-2-wt'), weight: getVal('pu-2-dur'), completed: isChecked('pu-2-check') },
+      { reps: getVal('pu-3-wt'), weight: getVal('pu-3-dur'), completed: isChecked('pu-3-check') },
+    ],
+    completed: blockState.pullups,
+  };
+
+  try {
+    const res = await fetch(LOG_EDGE, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: capturedEmail, fingers, bouldering, pullups, notes: getVal('session-notes') }),
+    });
+    if (!res.ok) throw new Error();
+    gtag('event', 'session_logged');
+    localStorage.removeItem('kc_session_state');
+    document.getElementById('tracker').style.display = 'none';
+    document.getElementById('done').style.display = 'flex';
+    document.getElementById('done-inner').style.display = 'block';
+  } catch {
+    err.style.display = 'block';
+    btn.disabled = false; btn.textContent = 'Log session + get email summary';
+  }
+}
+
+function resetSession() {
+  localStorage.removeItem('kc_session_state');
+  blockState = { fingers: false, bouldering: false, pullups: false };
+  boulderState = [false, false, false];
+  showTracker();
+}
+</script>
+</body>
+</html>

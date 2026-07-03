@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Climbing in the Heat — Kaizen Climbing</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --dark: #1e1c14;
+    --dark-2: #2a2718;
+    --dark-3: #332f1e;
+    --gold: #c8a84b;
+    --gold-light: #e0c068;
+    --cream: #f0eadc;
+    --muted: #9a9280;
+    --green: #4caf74;
+    --font: 'Georgia', serif;
+    --sans: system-ui, -apple-system, sans-serif;
+  }
+
+  body {
+    background: var(--dark);
+    color: var(--cream);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.7;
+  }
+
+  .wrap {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 60px 24px 100px;
+  }
+
+  /* ── Header ── */
+  .logo {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--gold);
+    margin-bottom: 48px;
+  }
+
+  .tag {
+    display: inline-block;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--gold);
+    border: 1px solid #3a3620;
+    border-radius: 3px;
+    padding: 3px 10px;
+    margin-bottom: 16px;
+  }
+
+  h1 {
+    font-family: var(--font);
+    font-size: clamp(1.8rem, 4vw, 2.4rem);
+    line-height: 1.2;
+    margin-bottom: 16px;
+  }
+
+  .intro {
+    color: var(--muted);
+    font-size: 1rem;
+    margin-bottom: 48px;
+    border-left: 2px solid #3a3620;
+    padding-left: 16px;
+  }
+
+  /* ── Mindset block ── */
+  .mindset {
+    background: var(--dark-2);
+    border: 1px solid #3a3620;
+    border-radius: 8px;
+    padding: 24px;
+    margin-bottom: 40px;
+  }
+
+  .mindset h2 {
+    font-family: var(--font);
+    font-size: 1.1rem;
+    color: var(--gold);
+    margin-bottom: 12px;
+  }
+
+  .mindset p {
+    font-size: 0.95rem;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+
+  .mindset p:last-child { margin-bottom: 0; }
+
+  .mindset strong { color: var(--cream); }
+
+  /* ── Tip blocks ── */
+  .section-label {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: #3a3620;
+  }
+
+  .block {
+    margin-bottom: 32px;
+  }
+
+  .block-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 12px;
+  }
+
+  .block-num {
+    font-family: var(--font);
+    font-size: 2rem;
+    color: #3a3620;
+    line-height: 1;
+    flex-shrink: 0;
+    width: 40px;
+  }
+
+  .block-meta { flex: 1; }
+
+  .block-title {
+    font-family: var(--font);
+    font-size: 1.2rem;
+    color: var(--cream);
+    margin-top: 6px;
+  }
+
+  .block-body {
+    padding-left: 56px;
+  }
+
+  .block-body p {
+    font-size: 0.95rem;
+    color: var(--muted);
+    margin-bottom: 10px;
+  }
+
+  .block-body p:last-child { margin-bottom: 0; }
+
+  .block-body strong { color: var(--cream); }
+
+  .note {
+    background: var(--dark-3);
+    border-left: 2px solid var(--gold);
+    border-radius: 0 4px 4px 0;
+    padding: 10px 14px;
+    font-size: 0.85rem;
+    color: var(--muted);
+    margin-top: 12px;
+  }
+
+  .note strong { color: var(--cream); }
+
+  .divider {
+    border: none;
+    border-top: 1px solid #2a2718;
+    margin: 32px 0;
+  }
+
+  /* ── CTA ── */
+  .cta-block {
+    text-align: center;
+    border: 1px solid #3a3620;
+    border-radius: 8px;
+    padding: 40px 24px;
+    background: var(--dark-2);
+    margin-top: 48px;
+  }
+
+  .cta-block h2 {
+    font-family: var(--font);
+    font-size: 1.4rem;
+    margin-bottom: 10px;
+  }
+
+  .cta-block p {
+    color: var(--muted);
+    font-size: 0.95rem;
+    margin-bottom: 24px;
+    line-height: 1.6;
+  }
+
+  .btn {
+    display: inline-block;
+    background: var(--gold);
+    color: var(--dark);
+    font-weight: 700;
+    font-size: 1rem;
+    padding: 16px 40px;
+    border-radius: 4px;
+    text-decoration: none;
+    letter-spacing: 0.02em;
+    border: none;
+    cursor: pointer;
+  }
+
+  .btn:hover { background: var(--gold-light); }
+
+  .cta-sub {
+    margin-top: 14px;
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+  /* ── Email gate ── */
+  #gate {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 32px 24px;
+  }
+
+  #gate .inner {
+    max-width: 420px;
+    width: 100%;
+    text-align: center;
+  }
+
+  #gate .logo { margin-bottom: 48px; }
+
+  #gate h1 {
+    font-family: var(--font);
+    font-size: 1.8rem;
+    margin-bottom: 12px;
+  }
+
+  #gate p {
+    color: var(--muted);
+    font-size: 0.95rem;
+    line-height: 1.7;
+    margin-bottom: 28px;
+  }
+
+  #gate-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  #gate-form input {
+    width: 100%;
+    background: var(--dark-2);
+    border: 1px solid #3a3620;
+    border-radius: 4px;
+    padding: 14px 16px;
+    color: var(--cream);
+    font-size: 1rem;
+    outline: none;
+    font-family: var(--sans);
+  }
+
+  #gate-form input:focus { border-color: var(--gold); }
+  #gate-form input::placeholder { color: var(--muted); }
+
+  #gate-form button {
+    background: var(--gold);
+    color: var(--dark);
+    border: none;
+    border-radius: 4px;
+    padding: 14px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    letter-spacing: 0.02em;
+  }
+
+  #gate-form button:hover { background: var(--gold-light); }
+  #gate-form button:disabled { opacity: 0.6; cursor: default; }
+
+  #gate-error {
+    font-size: 0.85rem;
+    color: #e07070;
+    display: none;
+    margin-top: 4px;
+  }
+
+  #content { display: none; }
+</style>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-X4W470YSQ6"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+  gtag("config", "G-X4W470YSQ6");
+</script>
+</head>
+<body>
+
+<!-- Email gate -->
+<div id="gate">
+  <div class="inner">
+    <div class="logo">Kaizen Climbing</div>
+    <h1>Climbing in the Heat</h1>
+    <p>Ten tricks for training in hot weather and high humidity — learnt from years of climbing in South East Asia.</p>
+    <form id="gate-form">
+      <input type="email" id="gate-email" placeholder="your@email.com" required autocomplete="email">
+      <button type="submit">View the guide</button>
+      <div id="gate-error">Something went wrong — try again.</div>
+    </form>
+    <p style="font-size:0.78rem; color: var(--muted); margin-top: 14px; line-height: 1.6;">I'll add you to my email list for free training tips and info on offers. Unsubscribe anytime.</p>
+  </div>
+</div>
+
+<!-- Guide content (hidden until email submitted) -->
+<div id="content">
+<div class="wrap">
+
+  <div class="logo">Kaizen Climbing</div>
+
+  <div class="tag">Training Guide</div>
+  <h1>Climbing in the Heat</h1>
+  <p class="intro">Hot temps can make you feel slow and sluggish. Sometimes it's a good chance to take it easy — but if you want to push on, here's what I've learnt from years of climbing and training in South East Asia.</p>
+
+  <!-- Mindset -->
+  <div class="mindset">
+    <h2>First, drop the ego</h2>
+    <p>Accept that your performance is going to be down. <strong>As long as things feel hard and you're training at the appropriate level, you're all good.</strong></p>
+    <p>It's the stimulus that counts, not the numbers.</p>
+  </div>
+
+  <div class="section-label">The tricks</div>
+
+  <!-- 01 -->
+  <div class="block">
+    <div class="block-header">
+      <div class="block-num">01</div>
+      <div class="block-meta">
+        <div class="block-title">Time it right</div>
+      </div>
+    </div>
+    <div class="block-body">
+      <p>Train early in the day or later in the evening — and <strong>avoid climbing in the sun at all costs.</strong> Even in the dead of winter this makes things harder.</p>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 02 -->
+  <div class="block">
+    <div class="block-header">
+      <div class="block-num">02</div>
+      <div class="block-meta">
+        <div class="block-title">Hydrate properly</div>
+      </div>
+    </div>
+    <div class="block-body">
+      <p>Stay hydrated, and maybe even add some salts/electrolytes. You're losing more than water when you're sweating through a session.</p>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 03 -->
+  <div class="block">
+    <div class="block-header">
+      <div class="block-num">03</div>
+      <div class="block-meta">
+        <div class="block-title">Shorten your warm-up</div>
+      </div>
+    </div>
+    <div class="block-body">
+      <p>Your body is already warm, so you don't need as much as you would on a cold winter's day. <strong>Save the energy for the actual climbing.</strong></p>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 04 -->
+  <div class="block">
+    <div class="block-header">
+      <div class="block-num">04</div>
+      <div class="block-meta">
+        <div class="block-title">Use fans</div>
+      </div>
+    </div>
+    <div class="block-body">
+      <p>Point them at yourself, at the wall, or on your hands. Fans on your skin and the holds/fingerboard keep skin dry and temps down.</p>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 05 -->
+  <div class="block">
+    <div class="block-header">
+      <div class="block-num">05</div>
+      <div class="block-meta">
+        <div class="block-title">Cool your skin between goes</div>
+      </div>
+    </div>
+    <div class="block-body">
+      <p>Hold a cold rock, waft your hands in the air, and rest between climbs. Some even like to soak their hands in cold water.</p>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 06 -->
+  <div class="block">
+    <div class="block-header">
+      <div class="block-num">06</div>
+      <div class="block-meta">
+        <div class="block-title">Climb on wood</div>
+      </div>
+    </div>
+    <div class="block-body">
+      <p>MoonBoard, woody spray walls or hangboards — <strong>not comp-style plastic</strong> — when it's hot. Wood handles sweaty skin far better.</p>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 07 -->
+  <div class="block">
+    <div class="block-header">
+      <div class="block-num">07</div>
+      <div class="block-meta">
+        <div class="block-title">Keep it simple</div>
+      </div>
+    </div>
+    <div class="block-body">
+      <p><strong>Short boulders &gt; long endurance</strong> when feet, skin and brain are cooked.</p>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 08 -->
+  <div class="block">
+    <div class="block-header">
+      <div class="block-num">08</div>
+      <div class="block-meta">
+        <div class="block-title">Sort your chalk</div>
+      </div>
+    </div>
+    <div class="block-body">
+      <p>Liquid chalk can be a saviour — and some even keep their chalk bag in a cooler.</p>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 09 -->
+  <div class="block">
+    <div class="block-header">
+      <div class="block-num">09</div>
+      <div class="block-meta">
+        <div class="block-title">Size your shoes up</div>
+      </div>
+    </div>
+    <div class="block-body">
+      <p>Go a touch bigger/softer — your feet will swell and hurt in the heat.</p>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 10 -->
+  <div class="block">
+    <div class="block-header">
+      <div class="block-num">10</div>
+      <div class="block-meta">
+        <div class="block-title">Have a plan B</div>
+      </div>
+    </div>
+    <div class="block-body">
+      <p>If it's all still too much on the brain and skin: <strong>fingerboard + lifting weights</strong> shouldn't be impacted much by the heat, and will let you work hard when your fingers and brain feel like mush.</p>
+      <div class="note"><strong>Bonus:</strong> commercial gyms can also have aircon.</div>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta-block">
+    <h2>Want a full 8-week structure?</h2>
+    <p>I'm running a bouldering programme through August and September. Personalised plan, weekly education, coach support. Starting 11 August.</p>
+    <button class="btn" id="waitlist-btn" onclick="joinWaitlist()">Join the waitlist →</button>
+    <p class="cta-sub" id="waitlist-sub"></p>
+  </div>
+
+</div>
+</div><!-- /content -->
+
+<script>
+  const GUIDE_EDGE = 'https://tgoxnqitdqyxtnoeaonc.supabase.co/functions/v1/subscribe-hot-weather-guide';
+  const WAITLIST_EDGE = 'https://tgoxnqitdqyxtnoeaonc.supabase.co/functions/v1/subscribe-waitlist';
+
+  let capturedEmail = '';
+
+  // If already submitted this session, skip gate
+  if (sessionStorage.getItem('hwg_unlocked')) {
+    capturedEmail = sessionStorage.getItem('hwg_email') || '';
+    document.getElementById('gate').style.display = 'none';
+    document.getElementById('content').style.display = 'block';
+  }
+
+  document.getElementById('gate-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = e.target.querySelector('button');
+    const err = document.getElementById('gate-error');
+    const email = document.getElementById('gate-email').value.trim();
+    btn.disabled = true;
+    btn.textContent = 'One sec...';
+    err.style.display = 'none';
+
+    try {
+      const res = await fetch(GUIDE_EDGE, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      });
+      if (!res.ok) throw new Error();
+      capturedEmail = email;
+      sessionStorage.setItem('hwg_unlocked', '1');
+      sessionStorage.setItem('hwg_email', email);
+      gtag('event', 'hot_weather_guide_signup', { method: 'email_gate' });
+      document.getElementById('gate').style.display = 'none';
+      document.getElementById('content').style.display = 'block';
+      window.scrollTo(0, 0);
+    } catch {
+      err.style.display = 'block';
+      btn.disabled = false;
+      btn.textContent = 'View the guide';
+    }
+  });
+
+  async function joinWaitlist() {
+    const btn = document.getElementById('waitlist-btn');
+    if (!capturedEmail) return;
+    btn.disabled = true;
+    btn.textContent = 'Adding you...';
+    try {
+      await fetch(WAITLIST_EDGE, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: capturedEmail, utm_source: 'hot_weather_guide' }),
+      });
+      gtag('event', 'waitlist_signup', { method: 'hot_weather_guide_cta' });
+      btn.textContent = "You're on the list";
+      btn.style.background = '#4caf74';
+      document.getElementById('waitlist-sub').textContent = "I'll be in touch before it opens.";
+    } catch {
+      btn.disabled = false;
+      btn.textContent = 'Join the waitlist →';
+    }
+  }
+</script>
+
+</body>
+</html>
