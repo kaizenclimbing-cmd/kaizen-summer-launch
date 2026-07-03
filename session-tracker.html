@@ -606,7 +606,8 @@ let currentStep = 0;
 
 // ── Gate ─────────────────────────────────────────────────────────────────────
 
-const storedEmail = localStorage.getItem('kc_tracker_email') || sessionStorage.getItem('sg_email');
+const urlEmail = new URLSearchParams(window.location.search).get('e');
+const storedEmail = urlEmail || localStorage.getItem('kc_tracker_email') || sessionStorage.getItem('sg_email');
 if (storedEmail) {
   capturedEmail = storedEmail;
   localStorage.setItem('kc_tracker_email', storedEmail);
