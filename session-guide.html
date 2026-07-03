@@ -31,7 +31,7 @@
   .wrap {
     max-width: 640px;
     margin: 0 auto;
-    padding: 60px 24px 100px;
+    padding: 60px 24px 140px;
   }
 
   /* ── Header ── */
@@ -262,6 +262,37 @@
     font-size: 0.8rem;
     color: var(--muted);
   }
+
+  /* ── Sticky session bar ── */
+  .sticky-bar {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: var(--dark-2);
+    border-top: 1px solid #3a3620;
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    z-index: 100;
+    backdrop-filter: blur(8px);
+  }
+  .sticky-bar p { font-size: 0.8rem; color: var(--muted); line-height: 1.4; }
+  .sticky-bar p strong { color: var(--cream); display: block; }
+  .btn-start {
+    background: var(--gold);
+    color: var(--dark);
+    border: none;
+    border-radius: 4px;
+    padding: 12px 24px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    white-space: nowrap;
+    text-decoration: none;
+    display: inline-block;
+  }
+  .btn-start:hover { background: var(--gold-light); }
   /* ── Email gate ── */
   #gate {
     min-height: 100vh;
@@ -465,6 +496,12 @@
 </div>
 </div><!-- /content -->
 
+<!-- Sticky bar — shown after gate -->
+<div class="sticky-bar" id="sticky-bar" style="display:none;">
+  <p><strong>Ready to train?</strong> Follow this session step by step.</p>
+  <a href="/session-tracker.html" class="btn-start">Start session →</a>
+</div>
+
 <script>
   const SESSION_EDGE = 'https://tgoxnqitdqyxtnoeaonc.supabase.co/functions/v1/subscribe-session';
   const WAITLIST_EDGE = 'https://tgoxnqitdqyxtnoeaonc.supabase.co/functions/v1/subscribe-waitlist';
@@ -476,6 +513,7 @@
     capturedEmail = sessionStorage.getItem('sg_email') || '';
     document.getElementById('gate').style.display = 'none';
     document.getElementById('content').style.display = 'block';
+    document.getElementById('sticky-bar').style.display = 'flex';
   }
 
   document.getElementById('gate-form').addEventListener('submit', async (e) => {
@@ -500,6 +538,7 @@
       gtag('event', 'session_guide_signup', { method: 'email_gate' });
       document.getElementById('gate').style.display = 'none';
       document.getElementById('content').style.display = 'block';
+      document.getElementById('sticky-bar').style.display = 'flex';
       window.scrollTo(0, 0);
     } catch {
       err.style.display = 'block';
