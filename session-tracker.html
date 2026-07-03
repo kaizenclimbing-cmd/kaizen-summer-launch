@@ -422,25 +422,10 @@
 </head>
 <body>
 
-<!-- ── Gate ── -->
-<div id="step-gate">
-  <div class="inner">
-    <div class="logo">Kaizen Climbing</div>
-    <h1>Session Tracker</h1>
-    <p>Follow the session step by step. Log your sets and weights — get a summary emailed when you're done.</p>
-    <form id="gate-form">
-      <input type="email" id="gate-email" placeholder="your@email.com" required autocomplete="email">
-      <button type="submit">Start session</button>
-      <div id="gate-error">Something went wrong — try again.</div>
-    </form>
-    <p id="gate-sub">I'll add you to my email list for free training tips and info on offers. Unsubscribe anytime.</p>
-  </div>
-</div>
-
 <!-- ── Step 2: Fingers — Ramp sets ── -->
 <div class="step" id="step-2">
   <div class="step-header">
-    <button class="back-btn" onclick="goTo(0)">←</button>
+    <span></span>
     <span class="step-indicator">1 of 4</span>
   </div>
   <div class="progress-bar"><div class="progress-fill" style="width:25%"></div></div>
@@ -604,59 +589,29 @@ let timers = {};
 let boulderState = [false, false, false];
 let currentStep = 0;
 
-// ── Gate ─────────────────────────────────────────────────────────────────────
+// ── Restore email from URL param, session guide, or localStorage ──────────────
 
 const urlEmail = new URLSearchParams(window.location.search).get('e');
-const storedEmail = urlEmail || localStorage.getItem('kc_tracker_email') || sessionStorage.getItem('sg_email');
+const storedEmail = urlEmail || sessionStorage.getItem('sg_email') || localStorage.getItem('kc_tracker_email');
 if (storedEmail) {
   capturedEmail = storedEmail;
   localStorage.setItem('kc_tracker_email', storedEmail);
-  buildSets();
-  restoreState();
-  goTo(2);
 }
 
-document.getElementById('gate-form').addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const btn = e.target.querySelector('button');
-  const err = document.getElementById('gate-error');
-  const email = document.getElementById('gate-email').value.trim();
-  btn.disabled = true; btn.textContent = 'One sec...';
-  err.style.display = 'none';
-  try {
-    await fetch(SESSION_EDGE, {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email }),
-    });
-    capturedEmail = email;
-    localStorage.setItem('kc_tracker_email', email);
-    gtag('event', 'tracker_start');
-    buildSets();
-    restoreState();
-    goTo(2);
-  } catch {
-    err.style.display = 'block';
-    btn.disabled = false; btn.textContent = 'Start session';
-  }
-});
+buildSets();
+if (localStorage.getItem('kc_session')) { restoreState(); } else { goTo(2); }
 
 // ── Navigation ────────────────────────────────────────────────────────────────
 
 function goTo(n) {
-  // Hide all
-  document.getElementById('step-gate').style.display = 'none';
   document.getElementById('step-done').style.display = 'none';
   document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
 
   currentStep = n;
   saveState();
 
-  if (n === 0) {
-    document.getElementById('step-gate').style.display = 'flex';
-  } else if (n >= 1 && n <= 5) {
-    const el = document.getElementById(`step-${n}`);
-    if (el) { el.classList.add('active'); window.scrollTo(0, 0); }
-  }
+  const el = document.getElementById(`step-${n}`);
+  if (el) { el.classList.add('active'); window.scrollTo(0, 0); }
 }
 
 // ── Build sets ────────────────────────────────────────────────────────────────
@@ -787,7 +742,8 @@ function restoreState() {
         document.getElementById(`bc-${i}`)?.classList.add('checked');
       }
     });
-    if (s.currentStep >= 2) goTo(s.currentStep);
+    if (s.currentStep >= 2 && s.currentStep <= 5) goTo(s.currentStep);
+    else goTo(2);
   } catch {}
 }
 

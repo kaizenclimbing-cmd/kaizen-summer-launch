@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Dev Preview</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: system-ui, sans-serif; background: #f5f5f3; padding: 40px 24px; }
+  h1 { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.12em; color: #999; margin-bottom: 32px; }
+  .group { margin-bottom: 32px; }
+  .group-label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.1em; color: #bbb; margin-bottom: 10px; }
+  .row { display: flex; flex-wrap: wrap; gap: 8px; }
+  a {
+    display: inline-block;
+    padding: 10px 18px;
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    color: #1e1c14;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  a:hover { border-color: #c8a84b; color: #c8a84b; }
+</style>
+</head>
+<body>
+<h1>Kaizen Summer Launch — Dev Preview</h1>
+
+<div class="group">
+  <div class="group-label">Session Guide</div>
+  <div class="row">
+    <a href="#" onclick="go('session-guide.html', {clear: true})">Gate (fresh)</a>
+    <a href="#" onclick="go('session-guide.html', {sgUnlocked: true})">Content (unlocked)</a>
+  </div>
+</div>
+
+<div class="group">
+  <div class="group-label">Session Tracker</div>
+  <div class="row">
+    <a href="#" onclick="go('session-tracker.html', {clear: true})">Gate (fresh)</a>
+    <a href="#" onclick="go('session-tracker.html', {trackerEmail: true, step: 2})">Step 1 — Fingers ramp</a>
+    <a href="#" onclick="go('session-tracker.html', {trackerEmail: true, step: 3})">Step 2 — Working sets</a>
+    <a href="#" onclick="go('session-tracker.html', {trackerEmail: true, step: 4})">Step 3 — Bouldering</a>
+    <a href="#" onclick="go('session-tracker.html', {trackerEmail: true, step: 5})">Step 4 — Pull-ups</a>
+    <a href="#" onclick="go('session-tracker.html', {trackerEmail: true, done: true})">Done screen</a>
+  </div>
+</div>
+
+<div class="group">
+  <div class="group-label">Other Pages</div>
+  <div class="row">
+    <a href="index.html" target="_blank">Home / Waitlist</a>
+    <a href="quiz.html" target="_blank">Quiz</a>
+    <a href="thankyou.html" target="_blank">Thank you</a>
+  </div>
+</div>
+
+<script>
+function go(page, opts) {
+  event.preventDefault();
+  if (opts.clear) {
+    localStorage.clear();
+    sessionStorage.clear();
+    window.location.href = page;
+    return;
+  }
+  if (opts.sgUnlocked) {
+    sessionStorage.setItem('sg_unlocked', '1');
+    sessionStorage.setItem('sg_email', 'preview@test.com');
+    window.location.href = page;
+    return;
+  }
+  if (opts.trackerEmail) {
+    localStorage.setItem('kc_tracker_email', 'preview@test.com');
+    if (opts.done) {
+      // store a step past 5 so done screen triggers
+      localStorage.setItem('kc_session', JSON.stringify({ currentStep: 6 }));
+    } else if (opts.step) {
+      localStorage.setItem('kc_session', JSON.stringify({ currentStep: opts.step }));
+    }
+    window.location.href = page;
+  }
+}
+</script>
+</body>
+</html>
