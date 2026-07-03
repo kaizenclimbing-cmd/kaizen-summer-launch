@@ -629,9 +629,12 @@ let currentStep = 0;
 
 // ── Gate ─────────────────────────────────────────────────────────────────────
 
-const storedEmail = localStorage.getItem('kc_tracker_email');
+const storedEmail = localStorage.getItem('kc_tracker_email') || sessionStorage.getItem('sg_email');
 if (storedEmail) {
   capturedEmail = storedEmail;
+  localStorage.setItem('kc_tracker_email', storedEmail);
+  buildSets();
+  restoreState();
   goTo(1);
 }
 
