@@ -22,34 +22,20 @@
     --sans: system-ui, -apple-system, sans-serif;
   }
 
-  html, body {
-    height: 100%;
-    overflow: hidden;
-  }
-
   body {
     background: var(--bg);
     color: var(--dark);
     font-family: var(--sans);
     font-size: 16px;
     line-height: 1.6;
-  }
-
-  #app {
-    position: relative;
-    height: 100%;
-    overflow: hidden;
+    overflow-x: hidden;
   }
 
   /* ── Step layout ── */
   .step {
     display: none;
-    position: absolute;
-    inset: 0;
+    min-height: 100vh;
     flex-direction: column;
-    background: var(--bg);
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
   }
   .step.active { display: flex; }
 
@@ -325,10 +311,14 @@
 
   /* ── Nav / buttons ── */
   .step-footer {
-    padding: 20px 24px 36px;
+    position: sticky;
+    bottom: 0;
+    background: var(--bg);
+    padding: 16px 24px env(safe-area-inset-bottom, 24px);
     max-width: 560px;
     width: 100%;
     margin: 0 auto;
+    border-top: 1px solid var(--border);
   }
 
   .btn-next {
@@ -435,7 +425,6 @@
 </script>
 </head>
 <body>
-<div id="app">
 
 <!-- ── Step 2: Fingers — Ramp sets ── -->
 <div class="step" id="step-2">
@@ -629,7 +618,7 @@ function goTo(n) {
   if (STEP_NAMES[n]) gtag('event', 'tracker_step', { step: STEP_NAMES[n], step_num: n - 1 });
 
   const el = document.getElementById(`step-${n}`);
-  if (el) { el.classList.add('active'); window.scrollTo(0, 0); }
+  if (el) { el.classList.add('active'); requestAnimationFrame(() => window.scrollTo(0, 0)); }
 }
 
 // ── Build sets ────────────────────────────────────────────────────────────────
@@ -811,6 +800,5 @@ function resetSession() {
 }
 
 </script>
-</div>
 </body>
 </html>
