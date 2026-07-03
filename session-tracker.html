@@ -437,36 +437,13 @@
   </div>
 </div>
 
-<!-- ── Step 1: Before you start ── -->
-<div class="step" id="step-1">
-  <div class="step-header">
-    <button class="back-btn" onclick="goTo(0)">←</button>
-    <span class="step-indicator">1 of 5</span>
-  </div>
-  <div class="progress-bar"><div class="progress-fill" style="width:20%"></div></div>
-  <div class="step-body">
-    <div class="step-tag">Before you start</div>
-    <h1 class="step-title">Keep the numbers low.</h1>
-    <p>Because you haven't been training consistently, you don't need to do much to get a good stimulus.</p>
-    <p><strong>Don't try to repeat the numbers from March.</strong> You'll either tweak a pulley or crush your ego — or both. The numbers will be lower. That's fine. The stimulus is still there.</p>
-    <div class="callout">
-      I climb 9b. This summer I've been doing 6b and 6c circuits. <strong>It's the stimulus that counts, not the grade.</strong>
-    </div>
-    <p>Today: fingers, then bouldering, then pull-ups. About 75 minutes.</p>
-    <div class="spacer"></div>
-  </div>
-  <div class="step-footer">
-    <button class="btn-next" onclick="goTo(2)">Start with fingers →</button>
-  </div>
-</div>
-
 <!-- ── Step 2: Fingers — Ramp sets ── -->
 <div class="step" id="step-2">
   <div class="step-header">
-    <button class="back-btn" onclick="goTo(1)">←</button>
-    <span class="step-indicator">2 of 5</span>
+    <button class="back-btn" onclick="goTo(0)">←</button>
+    <span class="step-indicator">1 of 4</span>
   </div>
-  <div class="progress-bar"><div class="progress-fill" style="width:40%"></div></div>
+  <div class="progress-bar"><div class="progress-fill" style="width:25%"></div></div>
   <div class="step-body">
     <div class="step-tag">Fingers — Ramp sets</div>
     <h1 class="step-title">Find your working weight.</h1>
@@ -497,9 +474,9 @@
 <div class="step" id="step-3">
   <div class="step-header">
     <button class="back-btn" onclick="goTo(2)">←</button>
-    <span class="step-indicator">3 of 5</span>
+    <span class="step-indicator">2 of 4</span>
   </div>
-  <div class="progress-bar"><div class="progress-fill" style="width:60%"></div></div>
+  <div class="progress-bar"><div class="progress-fill" style="width:50%"></div></div>
   <div class="step-body">
     <div class="step-tag">Fingers — Working sets</div>
     <h1 class="step-title">3 sets. 7 seconds each.</h1>
@@ -528,9 +505,9 @@
 <div class="step" id="step-4">
   <div class="step-header">
     <button class="back-btn" onclick="goTo(3)">←</button>
-    <span class="step-indicator">4 of 5</span>
+    <span class="step-indicator">3 of 4</span>
   </div>
-  <div class="progress-bar"><div class="progress-fill" style="width:80%"></div></div>
+  <div class="progress-bar"><div class="progress-fill" style="width:75%"></div></div>
   <div class="step-body">
     <div class="step-tag">Bouldering</div>
     <h1 class="step-title">Now you can enjoy it.</h1>
@@ -576,7 +553,7 @@
 <div class="step" id="step-5">
   <div class="step-header">
     <button class="back-btn" onclick="goTo(4)">←</button>
-    <span class="step-indicator">5 of 5</span>
+    <span class="step-indicator">4 of 4</span>
   </div>
   <div class="progress-bar"><div class="progress-fill" style="width:100%"></div></div>
   <div class="step-body">
@@ -635,7 +612,7 @@ if (storedEmail) {
   localStorage.setItem('kc_tracker_email', storedEmail);
   buildSets();
   restoreState();
-  goTo(1);
+  goTo(2);
 }
 
 document.getElementById('gate-form').addEventListener('submit', async (e) => {
@@ -655,7 +632,7 @@ document.getElementById('gate-form').addEventListener('submit', async (e) => {
     gtag('event', 'tracker_start');
     buildSets();
     restoreState();
-    goTo(1);
+    goTo(2);
   } catch {
     err.style.display = 'block';
     btn.disabled = false; btn.textContent = 'Start session';
@@ -809,7 +786,7 @@ function restoreState() {
         document.getElementById(`bc-${i}`)?.classList.add('checked');
       }
     });
-    if (s.currentStep > 0) goTo(s.currentStep);
+    if (s.currentStep >= 2) goTo(s.currentStep);
   } catch {}
 }
 
@@ -855,7 +832,7 @@ function resetSession() {
   localStorage.removeItem('kc_session');
   boulderState = [false, false, false];
   buildSets();
-  goTo(1);
+  goTo(2);
 }
 
 // Init
