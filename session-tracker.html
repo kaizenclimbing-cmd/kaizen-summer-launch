@@ -34,8 +34,12 @@
   /* ── Step layout ── */
   .step {
     display: none;
-    min-height: 100vh;
+    position: fixed;
+    inset: 0;
     flex-direction: column;
+    background: var(--bg);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
   }
   .step.active { display: flex; }
 
@@ -585,6 +589,7 @@ const SESSION_EDGE = 'https://tgoxnqitdqyxtnoeaonc.supabase.co/functions/v1/subs
 const LOG_EDGE     = 'https://tgoxnqitdqyxtnoeaonc.supabase.co/functions/v1/log-session';
 
 let capturedEmail = '';
+const STEP_NAMES = { 2: 'fingers_ramp', 3: 'fingers_working', 4: 'bouldering', 5: 'pullups' };
 let timers = {};
 let boulderState = [false, false, false];
 let currentStep = 0;
@@ -602,8 +607,6 @@ buildSets();
 if (localStorage.getItem('kc_session')) { restoreState(); } else { goTo(2); }
 
 // ── Navigation ────────────────────────────────────────────────────────────────
-
-const STEP_NAMES = { 2: 'fingers_ramp', 3: 'fingers_working', 4: 'bouldering', 5: 'pullups' };
 
 function goTo(n) {
   document.getElementById('step-done').style.display = 'none';
