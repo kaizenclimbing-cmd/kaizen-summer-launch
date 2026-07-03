@@ -8,21 +8,22 @@
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
   :root {
+    --bg: #f2ede3;
+    --surface: #faf7f1;
     --dark: #1e1c14;
     --dark-2: #2a2718;
-    --dark-3: #332f1e;
     --gold: #c8a84b;
     --gold-light: #e0c068;
-    --cream: #f0eadc;
-    --muted: #9a9280;
-    --green: #4caf74;
+    --muted: #7a7060;
+    --border: #ddd5c0;
+    --green: #2d7a4f;
     --font: 'Georgia', serif;
     --sans: system-ui, -apple-system, sans-serif;
   }
 
   body {
-    background: var(--dark);
-    color: var(--cream);
+    background: var(--bg);
+    color: var(--dark);
     font-family: var(--sans);
     font-size: 16px;
     line-height: 1.7;
@@ -49,7 +50,7 @@
     text-transform: uppercase;
     letter-spacing: 0.1em;
     color: var(--gold);
-    border: 1px solid #3a3620;
+    border: 1px solid var(--border);
     border-radius: 3px;
     padding: 3px 10px;
     margin-bottom: 16px;
@@ -66,14 +67,14 @@
     color: var(--muted);
     font-size: 1rem;
     margin-bottom: 48px;
-    border-left: 2px solid #3a3620;
+    border-left: 2px solid var(--border);
     padding-left: 16px;
   }
 
   /* ── Mindset block ── */
   .mindset {
-    background: var(--dark-2);
-    border: 1px solid #3a3620;
+    background: var(--surface);
+    border: 1px solid var(--border);
     border-radius: 8px;
     padding: 24px;
     margin-bottom: 40px;
@@ -94,7 +95,7 @@
 
   .mindset p:last-child { margin-bottom: 0; }
 
-  .mindset strong { color: var(--cream); }
+  .mindset strong { color: var(--dark); }
 
   /* ── Session blocks ── */
   .section-label {
@@ -112,7 +113,7 @@
     content: '';
     flex: 1;
     height: 1px;
-    background: #3a3620;
+    background: var(--border);
   }
 
   .block {
@@ -129,7 +130,7 @@
   .block-num {
     font-family: var(--font);
     font-size: 2rem;
-    color: #3a3620;
+    color: var(--border);
     line-height: 1;
     flex-shrink: 0;
     width: 40px;
@@ -140,7 +141,7 @@
   .block-title {
     font-family: var(--font);
     font-size: 1.2rem;
-    color: var(--cream);
+    color: var(--dark);
     margin-bottom: 2px;
   }
 
@@ -161,7 +162,7 @@
 
   .block-body p:last-child { margin-bottom: 0; }
 
-  .block-body strong { color: var(--cream); }
+  .block-body strong { color: var(--dark); }
 
   .steps {
     list-style: none;
@@ -189,7 +190,7 @@
   }
 
   .note {
-    background: var(--dark-3);
+    background: var(--surface);
     border-left: 2px solid var(--gold);
     border-radius: 0 4px 4px 0;
     padding: 10px 14px;
@@ -198,11 +199,11 @@
     margin-top: 12px;
   }
 
-  .note strong { color: var(--cream); }
+  .note strong { color: var(--dark); }
 
   .divider {
     border: none;
-    border-top: 1px solid #2a2718;
+    border-top: 1px solid var(--border);
     margin: 32px 0;
   }
 
@@ -211,8 +212,8 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: var(--dark-2);
-    border: 1px solid #3a3620;
+    background: var(--surface);
+    border: 1px solid var(--border);
     border-radius: 6px;
     padding: 16px 20px;
     margin-bottom: 48px;
@@ -224,10 +225,10 @@
   /* ── CTA ── */
   .cta-block {
     text-align: center;
-    border: 1px solid #3a3620;
+    border: 1px solid var(--border);
     border-radius: 8px;
     padding: 40px 24px;
-    background: var(--dark-2);
+    background: var(--surface);
   }
 
   .cta-block h2 {
@@ -267,8 +268,8 @@
   .sticky-bar {
     position: fixed;
     bottom: 0; left: 0; right: 0;
-    background: var(--dark-2);
-    border-top: 1px solid #3a3620;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
     padding: 16px 24px;
     display: flex;
     align-items: center;
@@ -278,7 +279,7 @@
     backdrop-filter: blur(8px);
   }
   .sticky-bar p { font-size: 0.8rem; color: var(--muted); line-height: 1.4; }
-  .sticky-bar p strong { color: var(--cream); display: block; }
+  .sticky-bar p strong { color: var(--dark); display: block; }
   .btn-start {
     background: var(--gold);
     color: var(--dark);
@@ -331,11 +332,11 @@
 
   #gate-form input {
     width: 100%;
-    background: var(--dark-2);
-    border: 1px solid #3a3620;
+    background: var(--surface);
+    border: 1px solid var(--border);
     border-radius: 4px;
     padding: 14px 16px;
-    color: var(--cream);
+    color: var(--dark);
     font-size: 1rem;
     outline: none;
     font-family: var(--sans);
