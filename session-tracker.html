@@ -140,7 +140,7 @@
 
   .set-row {
     display: grid;
-    grid-template-columns: 28px 1fr 1fr 40px;
+    grid-template-columns: 28px 1fr 1fr 1fr 40px;
     gap: 8px;
     align-items: center;
     margin-bottom: 8px;
@@ -667,12 +667,13 @@ function makeSet(id, num, p1, p2, block) {
   const row = document.createElement('div');
   row.className = 'set-row';
   const dur = p2 === null
-    ? `<div class="set-input" style="background:var(--bg);color:var(--muted);display:flex;align-items:center;font-size:0.85rem;">7 seconds</div>`
-    : `<input class="set-input" id="${id}-dur" placeholder="${p2}" type="text">`;
+    ? `<input class="set-input" id="${id}-dur" value="7" type="text" inputmode="numeric">`
+    : `<input class="set-input" id="${id}-dur" value="7" placeholder="${p2}" type="text" inputmode="numeric">`;
   row.innerHTML = `
     <div class="set-num">${num}</div>
-    <input class="set-input" id="${id}-wt" placeholder="${p1}" type="text">
+    <input class="set-input" id="${id}-wt" placeholder="${p1}" type="text" inputmode="decimal">
     ${dur}
+    <input class="set-input" id="${id}-eff" placeholder="Effort /10" type="text" inputmode="numeric">
     <div class="set-check" id="${id}-check" data-block="${block}">✓</div>
   `;
   return row;
@@ -728,6 +729,7 @@ function saveState() {
     state.sets[id] = {
       wt: document.getElementById(`${id}-wt`)?.value || '',
       dur: document.getElementById(`${id}-dur`)?.value || '',
+      eff: document.getElementById(`${id}-eff`)?.value || '',
       checked: document.getElementById(`${id}-check`)?.classList.contains('checked') || false,
     };
   });
@@ -745,6 +747,7 @@ function restoreState() {
     Object.entries(s.sets || {}).forEach(([id, v]) => {
       if (document.getElementById(`${id}-wt`)) document.getElementById(`${id}-wt`).value = v.wt;
       if (document.getElementById(`${id}-dur`)) document.getElementById(`${id}-dur`).value = v.dur;
+      if (document.getElementById(`${id}-eff`) && v.eff) document.getElementById(`${id}-eff`).value = v.eff;
       if (v.checked) document.getElementById(`${id}-check`)?.classList.add('checked');
     });
     boulderState.forEach((v, i) => {
